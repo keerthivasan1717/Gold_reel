@@ -9,7 +9,6 @@ Measures:
 
 import time
 import tracemalloc
-from pathlib import Path
 
 from goldreel.qc.gate import QualityGate
 from goldreel.state.store import StateStore

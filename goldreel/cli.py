@@ -22,6 +22,7 @@ from goldreel.audio.ducking import AudioMixer
 from goldreel.audio.library import MusicLibrary
 from goldreel.config.loader import load_pipeline_config, load_providers_config
 from goldreel.facts.models import FactTable
+from goldreel.publish.uploader import YouTubeUploader
 from goldreel.qc.gate import QualityGate
 from goldreel.render.engine import RenderEngine
 from goldreel.render.layouts.portrait import PortraitLayout
@@ -393,24 +394,40 @@ def publish(
     dry_run: bool = typer.Option(True, "--dry-run", help="Do not upload to YouTube API"),
 ) -> None:
     """Publish video to YouTube (scheduled) or package into out/ directory."""
-    pipe_cfg = load_pipeline_config()
     store = StateStore()
     job = store.get_job(job_id)
 
-    typer.secho(f"[Publish] Evaluating job {job_id}", fg=typer.colors.BRIGHT_YELLOW)
-    if not pipe_cfg.publishing.publish_enabled or dry_run:
-        typer.secho(
-            f"[Publish] Safe mode active (publish_enabled={pipe_cfg.publishing.publish_enabled}, dry_run={dry_run}).",
-            fg=typer.colors.CYAN,
-        )
-        job.mark_stage_completed(
-            "publish", metadata={"mode": "dry_run_or_disabled", "published": False}
-        )
-        return
+    typer.secho(
+        f"[Publish] Evaluating publishing for job {job_id} (dry_run={dry_run})",
+        fg=typer.colors.BRIGHT_YELLOW,
+    )
+    uploader = YouTubeUploader()
+    result = uploader.publish(job, dry_run=dry_run)
 
-    job.mark_stage_start("publish")
-    job.mark_stage_completed("publish", metadata={"mode": "scheduled", "published": True})
-    typer.secho(f"[Publish] Job {job_id} scheduled for publish.", fg=typer.colors.GREEN)
+    if result.success:
+        if result.mode == "scheduled":
+            typer.secho(
+                f"[Publish] SUCCESS - Video scheduled on YouTube for {result.scheduled_at}: {result.youtube_url}",
+                fg=typer.colors.GREEN,
+                bold=True,
+            )
+        elif result.mode == "fallback_package":
+            typer.secho(
+                f"[Publish] RESTRICTED/FALLBACK - Release package generated at {result.fallback_package_path}",
+                fg=typer.colors.CYAN,
+                bold=True,
+            )
+            typer.echo(f"  Details: {result.details}")
+        else:  # dry_run
+            typer.secho(
+                f"[Publish] DRY RUN - {result.details}",
+                fg=typer.colors.GREEN,
+            )
+            if result.fallback_package_path:
+                typer.echo(f"  Package: {result.fallback_package_path}")
+    else:
+        typer.secho(f"[Publish] FAILED - {result.details}", fg=typer.colors.RED)
+        raise typer.Exit(code=1)
 
 
 @app.command()
