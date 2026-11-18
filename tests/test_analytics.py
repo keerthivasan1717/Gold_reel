@@ -145,3 +145,4 @@ def test_weekly_email_reporter_renders_text_and_html(tmp_path: Path):
     assert "<!DOCTYPE html>" in html_content
     assert "#D4AF37" in html_content
     assert "Template Performance Rankings" in html_content
+

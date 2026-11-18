@@ -1,7 +1,7 @@
 """YouTube Analytics and video statistics harvester."""
 
-from datetime import UTC, datetime
 import json
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -109,7 +109,6 @@ class YouTubeAnalyticsClient:
             # Determine views, watch time, retention
             if stats:
                 views = int(stats.get("viewCount", 0))
-                likes = int(stats.get("likeCount", 0))
                 # Approximate watch time and retention
                 avg_sec = 45.0 if format_type == "portrait" else 140.0
                 watch_time_h = round((views * avg_sec) / 3600.0, 2)
@@ -167,3 +166,4 @@ class YouTubeAnalyticsClient:
         except Exception:
             pass
         return {}
+

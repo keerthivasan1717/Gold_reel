@@ -157,3 +157,4 @@ class WeeklyEmailReporter:
         html_path.write_text(self.generate_email_html(summary, health_status), encoding="utf-8")
 
         return txt_path, html_path
+

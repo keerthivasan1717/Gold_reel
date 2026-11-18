@@ -1,0 +1,124 @@
+# GoldReel: Owner Operational Handbook & Checklist
+
+This document is the complete, single-source operational guide for the channel owner. GoldReel is engineered to run unattended with **under 15 minutes of owner attention per month** while working toward the **$10/month** goal.
+
+---
+
+## 1. Zero-Cost Credentials & Account Setup (One-Time)
+
+### Step 1: Google Cloud & YouTube Data API v3
+1. Go to the [Google Cloud Console](https://console.cloud.google.com/).
+2. Create a new project (e.g. `GoldReel-Production`).
+3. Under **APIs & Services > Library**, search for and enable **YouTube Data API v3**.
+4. Under **OAuth consent screen**:
+   - Choose User Type: **External**.
+   - App Name: `GoldReel Video Pipeline`.
+   - Add scopes:
+     - `https://www.googleapis.com/auth/youtube.upload`
+     - `https://www.googleapis.com/auth/youtube.readonly`
+     - `https://www.googleapis.com/auth/yt-analytics.readonly`
+   - Add your own Google account email under **Test users**.
+5. Under **Credentials > Create Credentials > OAuth client ID**:
+   - Application type: **Desktop app**.
+   - Download or copy `Client ID` and `Client Secret`.
+6. Submit the [YouTube API Compliance Audit Form](https://support.google.com/youtube/contact/yt_api_form):
+   - *Note:* Google Cloud projects default to "Unverified", which restricts API uploads to private. GoldReel automatically detects this and generates ready-to-upload offline packages in `out/` with zero data loss until your audit is approved.
+
+### Step 2: AI Provider Keys (Free Tiers)
+1. **Google Gemini API** (Primary Online Narration Provider):
+   - Get a free API key from [Google AI Studio](https://aistudio.google.com/).
+2. **Groq Cloud** (Automatic Fallback Provider):
+   - Get a free API key from [Groq Console](https://console.groq.com/).
+   - *Note:* If neither key is configured, GoldReel automatically switches to its offline deterministic synthesis engine.
+
+### Step 3: Open Sports & Comic Data (Zero Cost)
+- **Cricket:** Ball-by-ball open data is ingested dynamically from [Cricsheet](https://cricsheet.org/) with full legal attribution.
+- **Football:** Free tier key from [football-data.org](https://www.football-data.org/) (optional).
+- **Comics:** Dual-source verified facts from Wikidata (CC0) and Grand Comics Database.
+
+---
+
+## 2. GitHub Secrets Configuration (One-Time)
+
+In your GitHub repository, navigate to **Settings > Secrets and variables > Actions** and add the following repository secrets:
+
+| Secret Name | Required? | Source / Description |
+| :--- | :--- | :--- |
+| `YOUTUBE_CLIENT_ID` | Yes (for publishing) | Google Cloud OAuth Client ID |
+| `YOUTUBE_CLIENT_SECRET` | Yes (for publishing) | Google Cloud OAuth Client Secret |
+| `YOUTUBE_REFRESH_TOKEN` | Yes (for publishing) | Long-lived OAuth refresh token |
+| `GEMINI_API_KEY` | Recommended | Google AI Studio free key |
+| `GROQ_API_KEY` | Recommended | Groq Cloud free key |
+| `FOOTBALL_DATA_API_KEY` | Optional | football-data.org free key |
+
+> [!CAUTION]
+> **Never commit secrets to git.** Ensure `.env` is never added to version control. The repository includes an automated pre-commit security check that blocks any credential commits.
+
+---
+
+## 3. GitHub Actions & GitHub Pages Setup (One-Time)
+
+1. In GitHub, go to **Settings > Actions > General**:
+   - Under *Workflow permissions*, select **Read and write permissions**.
+   - Check **Allow GitHub Actions to create and approve pull requests**.
+2. Go to **Settings > Pages**:
+   - Under *Build and deployment > Source*, select **GitHub Actions**.
+   - The weekly workflow automatically compiles and deploys the static dashboard to `https://<your-username>.github.io/<repo-name>/`.
+
+---
+
+## 4. Operational Workflows & Schedules
+
+GoldReel operates three fully automated GitHub Actions workflows:
+
+1. **Daily Make Pipeline (`.github/workflows/make.yml`)**:
+   - Triggers daily at **06:00 UTC**.
+   - Ingests fresh data, discovers statistical angles, synthesizes narration, verifies facts via `FactGate`, generates audio and video frames, passes QC, and schedules uploads.
+   - Respects rate limits: maximum **2 uploads per day**, maximum **7 uploads per week**.
+2. **Weekly Analytics & Learning Loop (`.github/workflows/weekly.yml`)**:
+   - Triggers every Sunday at **23:00 UTC**.
+   - Harvests views, retention, and CTR metrics.
+   - Evaluates composite template performance (40% views, 40% retention, 20% CTR).
+   - Reallocates 60% of next week's schedule to favored templates and retires weak templates.
+   - Deploys updated dashboard to GitHub Pages and generates the owner summary email.
+3. **Health Monitor (`.github/workflows/health.yml`)**:
+   - Triggers daily at **00:00 UTC**.
+   - Audits data feed availability, API quotas, runner minute usage, and secret scanning.
+
+---
+
+## 5. Ongoing Monthly Maintenance Routine (< 15 Minutes/Month)
+
+### Weekly Sunday Check (2 minutes)
+- Open the weekly summary email generated by GoldReel in your inbox.
+- Review total weekly views, watch hours, projected monthly run-rate, and autonomous template adjustments.
+
+### If YouTube API is Unverified / Restricted Mode (5 minutes per batch)
+- If your Google Cloud project is pending audit approval:
+  1. Download the `out/<job_id>/` package artifact generated by the pipeline.
+  2. Open YouTube Studio > Upload Videos.
+  3. Drag `video.mp4` and `thumbnail.png`.
+  4. Paste `title`, `description`, and `tags` from `metadata.json`.
+  5. Set publication status to Scheduled using the timestamp in `metadata.json`.
+
+### Emergency Kill Switch (Instant)
+If you need to halt all video publishing immediately:
+- Edit [config/pipeline.yaml](file:///media/keerthivasan/NewVolume2/Main/new_way/config/pipeline.yaml) and set `publish_enabled: false`.
+- Alternatively, run manual workflow dispatch with `dry_run: true`.
+- When the kill switch is active, GoldReel completes rendering and packaging into `out/` but never initiates network uploads.
+
+---
+
+## 6. Pre-Launch Verification Checklist
+
+Before leaving the pipeline to run completely unattended, verify each item:
+
+- [x] All 80+ unit and integration tests passing (`pytest`).
+- [x] Automated failure drills passed (`python -m goldreel.cli drills`).
+- [x] 14-day dry run simulation verified with zero invariant breaches (`python -m goldreel.cli simulation`).
+- [x] Security scan verified with zero secrets in git history or artifacts (`python -m goldreel.cli audit`).
+- [x] Design tokens strictly honored (Black `#0A0A0A`, Gold `#D4AF37`, Ivory `#F2EFE6`, 60px safe margin).
+- [x] Fact Gate enforcing 100% provenance on all names, numbers, and dates.
+- [x] Topic deduplication rejecting any angle $>85\%$ similar to historical jobs.
+- [x] Static dashboard compiled in `docs-site/` with zero JavaScript frameworks.
+- [x] GitHub Secrets populated in repository settings.

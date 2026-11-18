@@ -17,8 +17,6 @@ from goldreel.analytics.email_reporter import WeeklyEmailReporter
 from goldreel.analytics.models import VideoAnalyticsRecord
 from goldreel.analytics.scorer import TemplateScorer
 from goldreel.dashboard.generator import DashboardGenerator
-from goldreel.dashboard.models import PipelineStageCard, SystemHealthStatus
-from goldreel.state.store import StateStore
 
 
 def run_benchmark():
@@ -92,7 +90,7 @@ def run_benchmark():
     print(f"Total benchmark wall time:                    {t_total:.4f} s")
     print(f"Current Memory:                               {current_mem / 1024 / 1024:.2f} MB")
     print(f"Peak Memory:                                  {peak_mem / 1024 / 1024:.2f} MB")
-    print(f"Budget ceiling:                               3000.00 MB")
+    print("Budget ceiling:                               3000.00 MB")
     assert peak_mem < 3000 * 1024 * 1024, "Peak memory breached 3 GB budget!"
     print("Benchmark completed successfully. Budget compliance verified.")
 

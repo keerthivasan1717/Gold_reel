@@ -36,3 +36,15 @@ jobs:
         run: |
           pytest -v
 
+      - name: Run security audit
+        run: |
+          python -m goldreel.cli audit
+
+      - name: Run failure resilience drills
+        run: |
+          python -m goldreel.cli drills
+
+      - name: Run 14-day simulation
+        run: |
+          python -m goldreel.cli simulation
+

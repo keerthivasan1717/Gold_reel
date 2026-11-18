@@ -6,14 +6,13 @@ Strictly follows docs/DESIGN.md Section 9 & docs/PLAN.md Section 4:
 - Builds status strip, horizontal pipeline card board, queue history, template scores, and health monitors
 """
 
-from datetime import UTC, datetime
 import json
+from datetime import datetime
 from pathlib import Path
 
 from jinja2 import Environment, FileSystemLoader
 
 from goldreel.analytics.client import YouTubeAnalyticsClient
-from goldreel.analytics.models import TemplatePerformance, VideoAnalyticsRecord
 from goldreel.analytics.scorer import TemplateScorer
 from goldreel.config.loader import PipelineConfig, load_pipeline_config
 from goldreel.dashboard.models import (
@@ -24,7 +23,7 @@ from goldreel.dashboard.models import (
 from goldreel.design.tokens import Tokens
 from goldreel.publish.auth import YouTubeAuth
 from goldreel.publish.scheduler import PublishScheduler
-from goldreel.state.store import JobManifest, JobState, StateStore
+from goldreel.state.store import StateStore
 
 
 class DashboardGenerator:

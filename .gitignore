@@ -48,6 +48,8 @@ docs-site/
 # Testing & Tools
 .pytest_cache/
 .ruff_cache/
+*.zip
+*.tar.gz
 .coverage
 htmlcov/
 *.log

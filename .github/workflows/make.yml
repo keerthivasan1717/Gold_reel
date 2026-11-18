@@ -33,7 +33,13 @@ jobs:
           python -m pip install --upgrade pip
           pip install -e .
 
+      - name: Security pre-run check
+        run: |
+          python -m goldreel.cli audit
+
       - name: Ingest open data
+        env:
+          FOOTBALL_DATA_API_KEY: ${{ secrets.FOOTBALL_DATA_API_KEY }}
         run: |
           python -m goldreel.cli ingest
 
@@ -41,7 +47,18 @@ jobs:
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          YOUTUBE_CLIENT_ID: ${{ secrets.YOUTUBE_CLIENT_ID }}
+          YOUTUBE_CLIENT_SECRET: ${{ secrets.YOUTUBE_CLIENT_SECRET }}
+          YOUTUBE_REFRESH_TOKEN: ${{ secrets.YOUTUBE_REFRESH_TOKEN }}
         run: |
           DRY_RUN="${{ github.event.inputs.dry_run || 'false' }}"
           python -m goldreel.cli make --dry-run "$DRY_RUN"
+
+      - name: Archive publication packages (if any)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: goldreel-out-packages
+          path: out/
+          if-no-files-found: ignore
 

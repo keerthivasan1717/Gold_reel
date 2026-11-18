@@ -28,7 +28,28 @@ jobs:
           python -m pip install --upgrade pip
           pip install -e .
 
-      - name: Run pipeline report
+      - name: Run analytics learning loop
+        env:
+          YOUTUBE_CLIENT_ID: ${{ secrets.YOUTUBE_CLIENT_ID }}
+          YOUTUBE_CLIENT_SECRET: ${{ secrets.YOUTUBE_CLIENT_SECRET }}
+          YOUTUBE_REFRESH_TOKEN: ${{ secrets.YOUTUBE_REFRESH_TOKEN }}
         run: |
-          python -m goldreel.cli report
+          python -m goldreel.cli analytics --pull || true
+
+      - name: Generate weekly owner summary email
+        run: |
+          python -m goldreel.cli email
+
+      - name: Compile static dashboard
+        run: |
+          python -m goldreel.cli dashboard
+
+      - name: Upload dashboard artifact for Pages
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs-site/
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
 

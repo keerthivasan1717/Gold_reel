@@ -30,3 +30,11 @@ jobs:
         run: |
           python -m goldreel.cli report
 
+      - name: Run security health audit
+        run: |
+          python -m goldreel.cli audit
+
+      - name: Run subsystem failure drills
+        run: |
+          python -m goldreel.cli drills
+

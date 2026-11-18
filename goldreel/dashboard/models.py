@@ -2,9 +2,10 @@
 
 from datetime import UTC, datetime
 from typing import Any
+
 from pydantic import BaseModel, Field
 
-from goldreel.analytics.models import TemplatePerformance, VideoAnalyticsRecord
+from goldreel.analytics.models import TemplatePerformance
 
 
 class PipelineStageCard(BaseModel):
@@ -59,3 +60,4 @@ class DashboardViewModel(BaseModel):
     total_views: int = 0
     total_watch_time: float = 0.0
     generated_at: str = Field(default_factory=lambda: datetime.now(UTC).strftime("%Y-%m-%d %H:%M:%S UTC"))
+

@@ -48,3 +48,4 @@ def test_dashboard_generates_valid_html_and_css(tmp_path: Path):
     # 5. Production History and metrics
     assert "Production History & Metrics" in html_content
     assert "data-table" in html_content
+

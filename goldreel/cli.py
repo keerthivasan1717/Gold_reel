@@ -506,5 +506,88 @@ def email(
     typer.secho(f"[Email] SUCCESS - Generated {txt_p} and {html_p}", fg=typer.colors.GREEN, bold=True)
 
 
+@app.command()
+def audit() -> None:
+    """Run comprehensive security audit (tracked files, git history, artifacts)."""
+    from goldreel.security.scanner import RepositorySecurityScanner
+
+    typer.secho("[Audit] Running repository security scan...", fg=typer.colors.BRIGHT_YELLOW)
+    scanner = RepositorySecurityScanner()
+    report = scanner.run_full_audit()
+
+    if report.passed:
+        typer.secho("[Audit] PASSED - Zero secret leaks, private keys, or exposed credentials found.", fg=typer.colors.GREEN, bold=True)
+    else:
+        typer.secho(f"[Audit] FAILED - {report.total_violations} security violation(s) detected!", fg=typer.colors.RED, bold=True)
+        for v in report.tracked_violations:
+            typer.secho(f"  Tracked: {v}", fg=typer.colors.RED)
+        for v in report.history_violations:
+            typer.secho(f"  History: {v}", fg=typer.colors.RED)
+        for v in report.artifact_violations:
+            typer.secho(f"  Artifact: {v}", fg=typer.colors.RED)
+        for v in report.untracked_risks:
+            typer.secho(f"  Untracked Risk: {v}", fg=typer.colors.YELLOW)
+        raise typer.Exit(code=1)
+
+
+@app.command()
+def drills() -> None:
+    """Run automated failure resilience drills."""
+    from goldreel.drills.runner import FailureDrillRunner
+
+    typer.secho("[Drills] Running pipeline failure resilience drills...", fg=typer.colors.BRIGHT_YELLOW)
+    runner = FailureDrillRunner()
+    try:
+        results = runner.run_all_drills()
+        all_passed = True
+        for r in results:
+            color = typer.colors.GREEN if r.passed else typer.colors.RED
+            status = "PASS" if r.passed else "FAIL"
+            typer.secho(f"  [{status}] {r.name}: {r.description}", fg=color)
+            if not r.passed:
+                all_passed = False
+                typer.secho(f"         Details: {r.details}", fg=typer.colors.RED)
+
+        if all_passed:
+            typer.secho(f"[Drills] SUCCESS - All {len(results)} failure drills passed.", fg=typer.colors.GREEN, bold=True)
+        else:
+            typer.secho("[Drills] FAILED - One or more drills failed.", fg=typer.colors.RED, bold=True)
+            raise typer.Exit(code=1)
+    finally:
+        runner.cleanup()
+
+
+@app.command()
+def simulation(
+    days: int = typer.Option(14, "--days", "-d", help="Number of days to simulate"),
+) -> None:
+    """Run multi-day unattended dry run simulation."""
+    from goldreel.drills.simulation import PipelineSimulationHarness
+
+    typer.secho(f"[Simulation] Starting {days}-day unattended pipeline simulation...", fg=typer.colors.BRIGHT_YELLOW)
+    harness = PipelineSimulationHarness()
+    try:
+        summary = harness.run_14_day_simulation()
+        typer.secho(
+            f"[Simulation] Completed {summary.total_days} days | "
+            f"Jobs run: {summary.total_jobs_run} | "
+            f"Succeeded: {summary.total_jobs_succeeded} | "
+            f"Deduped: {summary.total_deduplicated_angles}",
+            fg=typer.colors.CYAN,
+        )
+        typer.echo(f"  Weekly emails generated: {summary.weekly_emails_generated}")
+        typer.echo(f"  Dashboards built:        {summary.dashboards_built}")
+        typer.echo(f"  Peak RAM observed:       {summary.overall_peak_ram_mb:.2f} MB (Budget: 3000 MB)")
+        typer.echo(f"  Total simulation time:   {summary.total_wall_time_seconds:.2f} s")
+
+        if summary.success:
+            typer.secho("[Simulation] SUCCESS - 14-day dry run verified all invariants.", fg=typer.colors.GREEN, bold=True)
+        else:
+            typer.secho("[Simulation] FAILED - Invariants breached.", fg=typer.colors.RED, bold=True)
+            raise typer.Exit(code=1)
+    finally:
+        harness.cleanup()
+
+
 if __name__ == "__main__":
     app()

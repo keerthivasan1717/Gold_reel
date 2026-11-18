@@ -2,8 +2,8 @@
 
 from datetime import UTC, datetime
 from typing import Literal
-from pydantic import BaseModel, Field
 
+from pydantic import BaseModel, Field
 
 TemplateStatus = Literal["favored", "neutral", "retired"]
 
@@ -57,3 +57,4 @@ class LearningSummary(BaseModel):
     favored_templates: list[str] = Field(default_factory=list)
     action_items: list[str] = Field(default_factory=list)
     created_at: str = Field(default_factory=lambda: datetime.now(UTC).isoformat())
+

@@ -1,7 +1,6 @@
 """Template performance scoring and autonomous learning loop."""
 
 from datetime import UTC, datetime, timedelta
-from typing import Any
 
 from goldreel.analytics.models import LearningSummary, TemplatePerformance, VideoAnalyticsRecord
 
@@ -123,3 +122,4 @@ class TemplateScorer:
             favored_templates=favored,
             action_items=actions,
         )
+
