@@ -23,7 +23,10 @@ from goldreel.audio.library import MusicLibrary
 from goldreel.config.loader import load_pipeline_config, load_providers_config
 from goldreel.facts.models import FactTable
 from goldreel.render.engine import RenderEngine
+from goldreel.render.layouts.portrait import PortraitLayout
+from goldreel.render.templates.milestone import MilestoneTemplate
 from goldreel.render.templates.ranked_countdown import RankedCountdownTemplate
+from goldreel.render.templates.scroll_compare import ScrollCompareTemplate
 from goldreel.render.templates.stat_race import StatRaceTemplate
 from goldreel.script.router import ProviderRouter
 from goldreel.script.validator import ScriptValidator
@@ -279,11 +282,24 @@ def make(
     # Stage 8: Render (Stream frames to FFmpeg with muxed audio)
     job.mark_stage_start("render")
     engine = RenderEngine()
-    template = (
-        StatRaceTemplate()
-        if (candidates and candidates[0].angle_id == "stat_race") or format_type == "landscape"
-        else RankedCountdownTemplate()
-    )
+    angle_type = candidates[0].angle_id if candidates else "stat_race"
+
+    if format_type == "portrait":
+        if angle_type == "scroll_compare":
+            template = ScrollCompareTemplate()
+        elif angle_type == "milestone_anniversary":
+            template = MilestoneTemplate()
+        elif angle_type == "stat_race":
+            template = StatRaceTemplate(layout=PortraitLayout())
+        else:
+            template = RankedCountdownTemplate(layout=PortraitLayout())
+    else:
+        if angle_type == "ranked_countdown":
+            template = RankedCountdownTemplate()
+        elif angle_type == "scroll_compare":
+            template = ScrollCompareTemplate()
+        else:
+            template = StatRaceTemplate()
     # Render preview segment (3 seconds) in dry-run, or voice track duration
     dur_sec = 3.0 if dry_run else voice_track.total_duration_sec
     render_script = script.model_copy(update={"estimated_duration_sec": dur_sec})
