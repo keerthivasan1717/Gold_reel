@@ -36,14 +36,14 @@ def test_cli_qc_and_publish():
     import uuid
 
     test_jid = f"job_cli_{uuid.uuid4().hex[:8]}"
-    # First create a job via plan
-    plan_res = runner.invoke(app, ["plan", "--job-id", test_jid])
-    assert plan_res.exit_code == 0
+    # First create a full job via make in dry-run
+    make_res = runner.invoke(app, ["make", "--job-id", test_jid, "--lane", "sports", "--dry-run"])
+    assert make_res.exit_code == 0
 
     # Run QC
-    qc_res = runner.invoke(app, ["qc", "--job-id", test_jid])
+    qc_res = runner.invoke(app, ["qc", "--job-id", test_jid, "--dry-run"])
     assert qc_res.exit_code == 0
-    assert "[QC] All quality gates passed" in qc_res.stdout
+    assert "PASSED" in qc_res.stdout
 
     # Run Publish in dry-run
     pub_res = runner.invoke(app, ["publish", "--job-id", test_jid, "--dry-run"])

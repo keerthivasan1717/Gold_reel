@@ -126,6 +126,7 @@ class ScrollCompareTemplate(BaseTemplate):
 
         # Draw Row 1 (Series A)
         active_item_a = self._draw_scroll_row(
+            frame=frame,
             draw=draw,
             items=self.row_a_items,
             row_y=row1_y,
@@ -139,6 +140,7 @@ class ScrollCompareTemplate(BaseTemplate):
 
         # Draw Row 2 (Series B)
         active_item_b = self._draw_scroll_row(
+            frame=frame,
             draw=draw,
             items=self.row_b_items,
             row_y=row2_y,
@@ -247,6 +249,7 @@ class ScrollCompareTemplate(BaseTemplate):
 
     def _draw_scroll_row(
         self,
+        frame: Image.Image,
         draw: ImageDraw.ImageDraw,
         items: list[dict[str, Any]],
         row_y: int,
@@ -280,8 +283,15 @@ class ScrollCompareTemplate(BaseTemplate):
             font=font_pill,
         )
 
-        # Draw typographic cards
-        center_x = self.p_layout.width // 2
+        stage_x = self.p_layout.stage_x
+        stage_w = self.p_layout.stage_w
+        card_top = row_y + 35
+
+        # Create row canvas with RGBA transparency for clean clipping at safe margins
+        row_canvas = Image.new("RGBA", (stage_w, card_h + 10), (0, 0, 0, 0))
+        row_draw = ImageDraw.Draw(row_canvas)
+
+        center_x = stage_w // 2
         nearest_item = None
         min_dist = float("inf")
 
@@ -296,13 +306,12 @@ class ScrollCompareTemplate(BaseTemplate):
 
         effective_offset = scroll_x % loop_w
 
-        # Draw enough cards to cover screen width + margins
-        for idx in range(-2, len(items) + 4):
+        # Draw enough cards to cover screen width inside safe margins
+        for idx in range(-2, len(items) + 6):
             item = items[idx % len(items)]
-            base_x = idx * (card_w + gap) - effective_offset + 100
-            card_top = row_y + 35
+            base_x = idx * (card_w + gap) - effective_offset
 
-            if -card_w <= base_x <= self.p_layout.width:
+            if -card_w <= base_x <= stage_w:
                 # Distance to center
                 card_mid = base_x + card_w // 2
                 dist = abs(card_mid - center_x)
@@ -317,8 +326,8 @@ class ScrollCompareTemplate(BaseTemplate):
                 )
 
                 # Card panel
-                draw.rectangle(
-                    [base_x, card_top, base_x + card_w, card_top + card_h],
+                row_draw.rectangle(
+                    [base_x, 0, base_x + card_w, card_h],
                     fill=card_fill,
                     outline=card_outline,
                     width=2 if is_centered else 1,
@@ -327,11 +336,11 @@ class ScrollCompareTemplate(BaseTemplate):
                 # Big typographic number
                 val_str = str(item["value"])
                 val_color = Colors.rgb_gold if is_gold_accent else Colors.rgb_silver
-                draw.text((base_x + 20, card_top + 20), val_str, fill=val_color, font=font_val)
+                row_draw.text((base_x + 20, 20), val_str, fill=val_color, font=font_val)
 
                 # Entity name
-                draw.text(
-                    (base_x + 20, card_top + 100),
+                row_draw.text(
+                    (base_x + 20, 100),
                     item["entity"][:18],
                     fill=Colors.rgb_ivory,
                     font=font_entity,
@@ -339,16 +348,20 @@ class ScrollCompareTemplate(BaseTemplate):
 
                 # Context label
                 unit_label = item.get("unit") or item.get("group") or ""
-                draw.text(
-                    (base_x + 20, card_top + 155),
+                row_draw.text(
+                    (base_x + 20, 155),
                     str(unit_label)[:20],
                     fill=Colors.rgb_muted,
                     font=font_unit,
                 )
 
+        # Paste row canvas onto main frame clipped to safe margins
+        frame.paste(row_canvas, (stage_x, card_top), row_canvas)
+
         # Center indicator hairline
+        main_center_x = self.p_layout.width // 2
         draw.line(
-            [center_x, row_y + 25, center_x, row_y + 35 + card_h + 10],
+            [main_center_x, row_y + 25, main_center_x, row_y + 35 + card_h + 10],
             fill=Colors.rgb_gold,
             width=2,
         )

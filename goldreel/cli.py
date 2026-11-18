@@ -22,6 +22,7 @@ from goldreel.audio.ducking import AudioMixer
 from goldreel.audio.library import MusicLibrary
 from goldreel.config.loader import load_pipeline_config, load_providers_config
 from goldreel.facts.models import FactTable
+from goldreel.qc.gate import QualityGate
 from goldreel.render.engine import RenderEngine
 from goldreel.render.layouts.portrait import PortraitLayout
 from goldreel.render.templates.milestone import MilestoneTemplate
@@ -164,7 +165,10 @@ def make(
     """Run full pipeline: ingest -> facts -> topics -> script -> voice -> render -> qc."""
     pipe_cfg = load_pipeline_config()
     store = StateStore()
-    job = store.get_job(job_id) if job_id else store.create_job()
+    if job_id and (store.base_dir / job_id).exists():
+        job = store.get_job(job_id)
+    else:
+        job = store.create_job(job_id)
     typer.secho(
         f"[Make] Starting production for job {job.job_id} (dry_run={dry_run})",
         fg=typer.colors.BRIGHT_YELLOW,
@@ -233,16 +237,17 @@ def make(
     else:
         job.save_artifact("fact_gate_report.json", {"passed": True, "summary": val_res.summary})
         job.mark_stage_completed("fact_gate", metadata={"passed": True})
-        # Record topic into history to prevent future duplicates
-        history.record_topic(
-            job_id=job.job_id,
-            topic_id=fact_table.topic_id,
-            title=fact_table.title,
-            lane=lane,
-            angle_id=candidates[0].angle_id if candidates else "custom",
-            entities=[r.entity for r in fact_table.records],
-            facts_hash=compute_content_hash(fact_table.model_dump()),
-        )
+        if not dry_run:
+            # Record topic into history to prevent future duplicates in production
+            history.record_topic(
+                job_id=job.job_id,
+                topic_id=fact_table.topic_id,
+                title=fact_table.title,
+                lane=lane,
+                angle_id=candidates[0].angle_id if candidates else "custom",
+                entities=[r.entity for r in fact_table.records],
+                facts_hash=compute_content_hash(fact_table.model_dump()),
+            )
 
     # Stage 6: Voice (Piper TTS and Sentence Timing Solver)
     job.mark_stage_start("voice")
@@ -285,9 +290,9 @@ def make(
     angle_type = candidates[0].angle_id if candidates else "stat_race"
 
     if format_type == "portrait":
-        if angle_type == "scroll_compare":
+        if angle_type in ["scroll_compare", "comic_first_appearances"]:
             template = ScrollCompareTemplate()
-        elif angle_type == "milestone_anniversary":
+        elif angle_type in ["milestone_anniversary", "milestone"]:
             template = MilestoneTemplate()
         elif angle_type == "stat_race":
             template = StatRaceTemplate(layout=PortraitLayout())
@@ -325,32 +330,61 @@ def make(
     )
 
     typer.secho(
-        f"[Make] Pipeline completed for job {job.job_id} ({stats.total_frames} frames rendered in {stats.elapsed_time_sec:.1f}s)",
-        fg=typer.colors.GREEN,
+        f"[Make] Video rendered for job {job.job_id} ({stats.total_frames} frames rendered in {stats.elapsed_time_sec:.1f}s)",
+        fg=typer.colors.CYAN,
     )
+
+    # Stage 9: Automated Quality Control (Loudness, Frames, Metadata, Similarity)
+    gate = QualityGate()
+    qc_report = gate.evaluate_job(job, dry_run=dry_run)
+    if qc_report.passed:
+        typer.secho(
+            f"[Make] Pipeline completed and QC passed for job {job.job_id} ({len(qc_report.checks)} checks satisfied)",
+            fg=typer.colors.GREEN,
+        )
+    else:
+        typer.secho(
+            f"[Make] QC Flagged: {qc_report.summary}",
+            fg=typer.colors.YELLOW,
+        )
 
 
 @app.command()
 def qc(
     job_id: str = typer.Option(..., "--job-id", "-j", help="Job ID to verify"),
+    dry_run: bool = typer.Option(
+        True, "--dry-run", help="Evaluate with dry-run duration constraints"
+    ),
 ) -> None:
     """Run automated quality gates (duration, loudness, safe margins, similarity)."""
     store = StateStore()
     job = store.get_job(job_id)
-    pipe_cfg = load_pipeline_config()
 
-    typer.secho(f"[QC] Running quality gates for job {job_id}", fg=typer.colors.BRIGHT_YELLOW)
-    job.mark_stage_start("qc")
+    typer.secho(
+        f"[QC] Running quality gates for job {job_id} (dry_run={dry_run})",
+        fg=typer.colors.BRIGHT_YELLOW,
+    )
+    gate = QualityGate()
+    report = gate.evaluate_job(job, dry_run=dry_run)
 
-    checks = {
-        "loudness_target_lufs": pipe_cfg.quality_control.target_loudness_lufs,
-        "max_true_peak_dbfs": pipe_cfg.quality_control.max_true_peak_dbfs,
-        "similarity_threshold": pipe_cfg.quality_control.similarity_threshold_percent,
-        "passed": True,
-    }
-    job.save_artifact("qc_report.json", checks)
-    job.mark_stage_completed("qc", metadata=checks)
-    typer.secho(f"[QC] All quality gates passed for job {job_id}", fg=typer.colors.GREEN)
+    for c in report.checks:
+        icon = "✓" if c.passed else ("⚠" if c.severity == "warning" else "✗")
+        color = (
+            typer.colors.GREEN
+            if c.passed
+            else (typer.colors.YELLOW if c.severity == "warning" else typer.colors.RED)
+        )
+        typer.secho(f"  [{icon}] {c.name}: {c.message}", fg=color)
+
+    if report.passed:
+        typer.secho(
+            f"\n[QC] PASSED - All quality gates satisfied for job {job_id}",
+            fg=typer.colors.GREEN,
+            bold=True,
+        )
+    else:
+        typer.secho(f"\n[QC] FAILED - {report.summary}", fg=typer.colors.RED, bold=True)
+        raise typer.Exit(code=1)
 
 
 @app.command()

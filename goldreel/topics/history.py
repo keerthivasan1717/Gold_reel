@@ -89,6 +89,7 @@ class TopicHistory:
         entities: list[str],
         facts_hash: str | None = None,
         threshold: float = 85.0,
+        exclude_job_id: str | None = None,
     ) -> tuple[bool, str | None, float]:
         """Check if candidate topic is too similar to any previous video.
 
@@ -98,6 +99,9 @@ class TopicHistory:
         most_similar_topic: str | None = None
 
         for rec in self.records:
+            if exclude_job_id and rec.job_id == exclude_job_id:
+                continue
+
             # Exact facts hash match is 100% duplicate
             if facts_hash and rec.facts_hash == facts_hash:
                 return True, rec.topic_id, 100.0

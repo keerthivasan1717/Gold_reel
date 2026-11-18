@@ -45,6 +45,9 @@ class CreditsGenerator:
         lines.append(
             "• Visuals: GoldReel geometric design tokens and typography (OFL / Liberation)."
         )
+        lines.append(
+            "• Disclosure: This video was produced with automated data visualization and synthetic narration."
+        )
 
         return "\n".join(lines)
 

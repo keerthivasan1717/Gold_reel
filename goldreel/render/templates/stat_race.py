@@ -82,7 +82,8 @@ class StatRaceTemplate(BaseTemplate):
         # Stage coordinates
         stage_x = self.layout.stage_x
         stage_y = self.layout.stage_y + 20
-        stage_w = self.layout.stage_w - 180  # Leave room for bar values
+        # Subtract left label rail (320px) and right value label margin (140px)
+        stage_w = self.layout.stage_w - 320 - 140
         stage_h = self.layout.stage_h - 60  # Leave room for axis
 
         n_bars = min(len(self.items), 8)
