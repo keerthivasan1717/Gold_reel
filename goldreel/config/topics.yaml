@@ -4,7 +4,7 @@ angles:
     name: "Historical Stat Race"
     lane: "sports"
     description: "Cumulative leaderboard progression over time (e.g. IPL centuries, EPL goals)"
-    min_data_points: 10
+    min_data_points: 5
     scoring_weight: 1.2
     preferred_format: "landscape"
 

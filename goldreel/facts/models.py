@@ -37,6 +37,7 @@ class FactRecord(BaseModel):
 class FactTable(BaseModel):
     topic_id: str = Field(..., description="Topic identifier (e.g. 'ipl_most_centuries')")
     title: str = Field(..., description="Title of the fact table / ranking")
+    subtitle: str = Field(default="", description="Subtitle or secondary description")
     lane: Literal["sports", "comics"] = Field(..., description="Production lane")
     metric_label: str = Field(
         ..., description="Exact ranking rule (e.g. 'By centuries scored in IPL, 2008 to 2024')"
@@ -45,6 +46,15 @@ class FactTable(BaseModel):
         ..., min_length=1, description="Data sources for these facts"
     )
     records: list[FactRecord] = Field(..., min_length=1, description="List of verified facts")
+    time_steps: list[str] = Field(
+        default_factory=list, description="Ordered time steps for racing progression"
+    )
+    values_by_step: dict[str, dict[str, float]] = Field(
+        default_factory=dict, description="Values per entity per time step"
+    )
+    entity_groups: dict[str, str] = Field(
+        default_factory=dict, description="Group or team code per entity (e.g. 'IND', 'WI')"
+    )
     generated_at: str = Field(default_factory=lambda: datetime.now(UTC).isoformat())
 
     @model_validator(mode="after")

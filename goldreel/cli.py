@@ -171,6 +171,9 @@ def make(
     voice: bool = typer.Option(
         False, "--voice/--no-voice", help="Enable voice narration (default: music only)"
     ),
+    facts_path: Path | None = typer.Option(
+        None, "--facts", "-F", help="Optional path to custom facts or series JSON"
+    ),
     job_id: str | None = typer.Option(None, "--job-id", help="Resume an existing job or start new"),
 ) -> None:
     """Run full pipeline: ingest -> facts -> topics -> script -> voice -> render -> qc."""
@@ -194,12 +197,18 @@ def make(
 
     # Stage 2: Facts (Load verified facts via adapter)
     job.mark_stage_start("facts")
-    if lane == "comics":
+    if facts_path and Path(facts_path).exists():
+        adapter = WikidataComicAdapter() if lane == "comics" else CricsheetAdapter()
+        sample_path = Path(facts_path)
+    elif lane == "comics":
         adapter = WikidataComicAdapter()
         sample_path = Path("tests/fixtures/SAMPLE_wikidata_comic.json")
     else:
         adapter = CricsheetAdapter()
-        sample_path = Path("tests/fixtures/SAMPLE_cricket_facts.json")
+        if format_type == "landscape" and Path("tests/fixtures/SAMPLE_cricket_series.json").exists():
+            sample_path = Path("tests/fixtures/SAMPLE_cricket_series.json")
+        else:
+            sample_path = Path("tests/fixtures/SAMPLE_cricket_facts.json")
 
     if sample_path.exists():
         fact_table = adapter.extract_facts(sample_path)
@@ -408,7 +417,7 @@ def make(
 def qc(
     job_id: str = typer.Option(..., "--job-id", "-j", help="Job ID to verify"),
     dry_run: bool = typer.Option(
-        True, "--dry-run", help="Evaluate with dry-run duration constraints"
+        True, "--dry-run/--no-dry-run", help="Evaluate with dry-run duration constraints"
     ),
 ) -> None:
     """Run automated quality gates (duration, loudness, safe margins, similarity)."""

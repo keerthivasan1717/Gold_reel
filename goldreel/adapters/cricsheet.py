@@ -75,8 +75,18 @@ class CricsheetAdapter(BaseAdapter):
         self, raw_data_or_path: Any, topic_id: str = "ipl_most_centuries"
     ) -> FactTable:
         """Extract verified FactTable from match data or pre-computed records."""
+        if topic_id == "cricsheet_odi_centuries_progression":
+            from goldreel.facts.series import create_sports_time_series
+            return create_sports_time_series()
+
         now_iso = datetime.now(UTC).isoformat()
         records: list[FactRecord] = []
+        time_steps: list[str] = []
+        values_by_step: dict[str, dict[str, float]] = {}
+        entity_groups: dict[str, str] = {}
+        title = "Most Centuries in IPL History"
+        subtitle = "Progression of Top Batsmen (2008 - 2024)"
+        metric_label = "By centuries scored in IPL, 2008 to 2024"
 
         if isinstance(raw_data_or_path, list) and all(
             isinstance(m, dict) and "innings" in m for m in raw_data_or_path
@@ -95,16 +105,28 @@ class CricsheetAdapter(BaseAdapter):
         elif isinstance(raw_data_or_path, (dict, list)):
             # Structured ranking feed
             feed = raw_data_or_path if isinstance(raw_data_or_path, dict) else raw_data_or_path[0]
+            if feed.get("title"):
+                title = feed["title"]
+            if feed.get("subtitle"):
+                subtitle = feed["subtitle"]
+            if feed.get("metric"):
+                metric_label = feed["metric"]
+
+            time_steps = feed.get("time_steps", [])
+            values_by_step = feed.get("values_by_step", {})
+            entity_groups = feed.get("entity_groups", {})
+
             raw_records = feed.get("records", [])
             for r in raw_records:
+                entity_name = r.get("entity") or r.get("name")
                 records.append(
                     FactRecord(
                         rank=r.get("rank"),
-                        entity=r["name"],
+                        entity=entity_name,
                         metric=feed.get("metric", "IPL Centuries"),
                         value=r["value"],
                         unit=r.get("unit", "centuries"),
-                        context={"team": r.get("team", "")},
+                        context={"team": r.get("team", "") or r.get("context", {}).get("team", "")},
                     )
                 )
         elif isinstance(raw_data_or_path, (str, Path)):
@@ -126,9 +148,13 @@ class CricsheetAdapter(BaseAdapter):
 
         return FactTable(
             topic_id=topic_id,
-            title="Most Centuries in IPL History",
+            title=title,
+            subtitle=subtitle,
             lane="sports",
-            metric_label="By centuries scored in IPL, 2008 to 2024",
+            metric_label=metric_label,
             sources=[source],
             records=records,
+            time_steps=time_steps,
+            values_by_step=values_by_step,
+            entity_groups=entity_groups,
         )
