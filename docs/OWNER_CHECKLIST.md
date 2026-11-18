@@ -122,3 +122,4 @@ Before leaving the pipeline to run completely unattended, verify each item:
 - [x] Topic deduplication rejecting any angle $>85\%$ similar to historical jobs.
 - [x] Static dashboard compiled in `docs-site/` with zero JavaScript frameworks.
 - [x] GitHub Secrets populated in repository settings.
+

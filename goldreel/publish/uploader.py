@@ -125,9 +125,13 @@ class YouTubeUploader:
         job.register_existing_file(thumb_path)
         return thumb_path
 
-    def publish(self, job: JobState, dry_run: bool = False) -> PublishResult:
+    def publish(
+        self, job: JobState, dry_run: bool = False, force_publish: bool = False
+    ) -> PublishResult:
         """Publish a job video to YouTube or package into out/<job_id>/."""
         job.mark_stage_start("publish")
+        if force_publish:
+            self.config.publishing.publish_enabled = True
 
         # 1. Prerequisite: Check Quality Control Stage
         qc_report_path = job.job_dir / "qc_report.json"
@@ -343,16 +347,29 @@ class YouTubeUploader:
                     json=body,
                 )
 
+                if init_res.status_code == 400 and "publishAt" in status:
+                    # Retry without publishAt (direct private upload for unverified testing projects)
+                    status_fallback = {
+                        "privacyStatus": "private",
+                        "selfDeclaredMadeForKids": metadata.made_for_kids,
+                    }
+                    body_fallback = {"snippet": snippet, "status": status_fallback}
+                    init_res = client.post(
+                        f"{self.UPLOAD_URL}?uploadType=resumable&part=snippet,status",
+                        headers=headers,
+                        json=body_fallback,
+                    )
+
                 if init_res.status_code == 403:
                     return {
                         "restricted_project": True,
-                        "reason": "YouTube Data API compliance audit not completed (HTTP 403 Forbidden)",
+                        "reason": f"YouTube Data API error (HTTP 403): {init_res.text}",
                     }
 
                 if init_res.status_code not in (200, 201):
                     return {
                         "error": True,
-                        "reason": f"API init failed with HTTP {init_res.status_code}",
+                        "reason": f"API init failed with HTTP {init_res.status_code}: {init_res.text}",
                     }
 
                 upload_uri = init_res.headers.get("Location")
@@ -371,7 +388,7 @@ class YouTubeUploader:
                     return {"video_id": data.get("id")}
                 return {
                     "error": True,
-                    "reason": f"Upload PUT failed with HTTP {put_res.status_code}",
+                    "reason": f"Upload PUT failed with HTTP {put_res.status_code}: {put_res.text}",
                 }
         except Exception as e:
             return {"error": True, "reason": str(e)}

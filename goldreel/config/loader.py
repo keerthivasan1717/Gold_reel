@@ -110,12 +110,18 @@ def get_default_config_dir() -> Path:
 
 def load_pipeline_config(path: Path | None = None) -> PipelineConfig:
     """Load and validate pipeline.yaml."""
+    import os
+
     cfg_path = path or (get_default_config_dir() / "pipeline.yaml")
     if not cfg_path.exists():
         raise FileNotFoundError(f"Pipeline config not found: {cfg_path}")
     with open(cfg_path, encoding="utf-8") as f:
         data = yaml.safe_load(f)
-    return PipelineConfig.model_validate(data or {})
+    cfg = PipelineConfig.model_validate(data or {})
+    env_pub = os.getenv("GOLDREEL_PUBLISH_ENABLED")
+    if env_pub is not None:
+        cfg.publishing.publish_enabled = env_pub.lower() in ("1", "true", "yes")
+    return cfg
 
 
 def load_providers_config(path: Path | None = None) -> ProvidersConfig:

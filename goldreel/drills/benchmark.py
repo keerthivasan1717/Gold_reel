@@ -59,10 +59,11 @@ def run_benchmark():
     print(f"Total Hardening Benchmark Wall Time:        {t_total:.4f} s")
     print(f"Current Memory:                             {current_mem / 1024 / 1024:.2f} MB")
     print(f"Peak Memory:                                {peak_mem / 1024 / 1024:.2f} MB")
-    print(f"Budget Ceiling:                             3000.00 MB")
+    print("Budget Ceiling:                             3000.00 MB")
     assert peak_mem < 3000 * 1024 * 1024, "Peak memory breached 3 GB budget ceiling!"
     print("Benchmark completed successfully. Budget compliance verified.")
 
 
 if __name__ == "__main__":
     run_benchmark()
+

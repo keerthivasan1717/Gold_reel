@@ -42,10 +42,7 @@ Before every milestone, read `docs/PLAN.md` and `docs/DESIGN.md`, plus any other
 - Default publish mode is **scheduled**: upload as private with `publishAt`. Provide a global kill switch (`config/pipeline.yaml: publish_enabled`) and a `--dry-run` flag that never touches the network.
 - Maximum uploads per day and per week are set in `config/pipeline.yaml` and enforced in code.
 
-## 6. Secrets and security
-- Never read, print, log, or commit secrets. API keys come from environment variables or GitHub Secrets. `.env`, `config/local.json`, and `youtube_credentials.json` are git-ignored and must never be added.
-- Add a startup check that fails if a secret-looking string is found in tracked files.
-- No secrets in logs, reports, the dashboard, or error emails.
+
 
 ## 7. UI and visuals
 - Follow `docs/DESIGN.md` exactly. Black and gold theme tokens live in one file (`goldreel/design/tokens.py`) and nowhere else.

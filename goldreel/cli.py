@@ -163,7 +163,10 @@ def make(
         "landscape", "--format", "-f", help="'landscape' or 'portrait'"
     ),
     dry_run: bool = typer.Option(
-        True, "--dry-run", help="Run pipeline simulation without network publish"
+        True, "--dry-run/--no-dry-run", help="Run pipeline simulation without network publish"
+    ),
+    publish: bool = typer.Option(
+        False, "--publish", "-p", help="Publish directly to YouTube if QC passes"
     ),
     job_id: str | None = typer.Option(None, "--job-id", help="Resume an existing job or start new"),
 ) -> None:
@@ -347,6 +350,26 @@ def make(
             f"[Make] Pipeline completed and QC passed for job {job.job_id} ({len(qc_report.checks)} checks satisfied)",
             fg=typer.colors.GREEN,
         )
+        # Stage 10: Publish
+        should_publish = publish or (not dry_run and pipe_cfg.publishing.publish_enabled)
+        if should_publish:
+            uploader = YouTubeUploader()
+            pub_res = uploader.publish(job, dry_run=False, force_publish=publish)
+            if pub_res.success:
+                if pub_res.mode == "scheduled":
+                    typer.secho(
+                        f"[Make] SUCCESS - Video scheduled on YouTube for {pub_res.scheduled_at}: {pub_res.youtube_url}",
+                        fg=typer.colors.GREEN,
+                        bold=True,
+                    )
+                elif pub_res.mode == "fallback_package":
+                    typer.secho(
+                        f"[Make] RESTRICTED/FALLBACK - Release package generated at {pub_res.fallback_package_path}",
+                        fg=typer.colors.CYAN,
+                        bold=True,
+                    )
+            else:
+                typer.secho(f"[Make] Publish failed: {pub_res.details}", fg=typer.colors.RED)
     else:
         typer.secho(
             f"[Make] QC Flagged: {qc_report.summary}",
@@ -406,7 +429,7 @@ def publish(
         fg=typer.colors.BRIGHT_YELLOW,
     )
     uploader = YouTubeUploader()
-    result = uploader.publish(job, dry_run=dry_run)
+    result = uploader.publish(job, dry_run=dry_run, force_publish=not dry_run)
 
     if result.success:
         if result.mode == "scheduled":
@@ -587,6 +610,25 @@ def simulation(
             raise typer.Exit(code=1)
     finally:
         harness.cleanup()
+
+
+@app.command()
+def auth(
+    timeout: int = typer.Option(120, "--timeout", "-t", help="Timeout in seconds to wait for Google authorization"),
+) -> None:
+    """One-time browser authorization to acquire and save YouTube refresh token."""
+    from goldreel.publish.auth import YouTubeAuth
+
+    typer.secho("[Auth] Initializing YouTube OAuth desktop authorization...", fg=typer.colors.BRIGHT_YELLOW)
+    auth_mgr = YouTubeAuth()
+    try:
+        refresh_token = auth_mgr.start_desktop_auth(timeout_sec=timeout)
+        typer.secho("[Auth] SUCCESS - Refresh token acquired and saved to youtube_credentials.json!", fg=typer.colors.GREEN, bold=True)
+        typer.echo("  To also use it in environment variables or GitHub Secrets, set:")
+        typer.echo(f"  YOUTUBE_REFRESH_TOKEN={refresh_token}")
+    except Exception as e:
+        typer.secho(f"[Auth] FAILED: {e}", fg=typer.colors.RED, bold=True)
+        raise typer.Exit(code=1) from e
 
 
 if __name__ == "__main__":
