@@ -90,4 +90,3 @@ def test_render_short_to_mp4(tmp_path):
     assert out_mp4.stat().st_size > 2000
     assert stats.total_frames == 48
     assert stats.peak_ram_mb < 500.0
-

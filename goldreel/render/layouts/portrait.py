@@ -38,6 +38,9 @@ class PortraitLayout:
 
     # Footer bounds (just above the 120px platform UI exclusion zone)
     footer_y: int = Layout.PORTRAIT_HEIGHT - Layout.PORTRAIT_SAFE_MARGIN_BOTTOM - 45
+    footer_x_source: int = Layout.PORTRAIT_SAFE_MARGIN_X
+    footer_x_brand: int = Layout.PORTRAIT_WIDTH - Layout.PORTRAIT_SAFE_MARGIN_X - 180
+    margin: int = Layout.PORTRAIT_SAFE_MARGIN_X
 
     # Font paths
     FONT_DISPLAY: str = "assets/fonts/BebasNeue-Regular.ttf"
