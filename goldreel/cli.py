@@ -17,6 +17,9 @@ import typer
 from goldreel.adapters.cricsheet import CricsheetAdapter
 from goldreel.adapters.football import FootballAdapter
 from goldreel.adapters.wikidata import WikidataComicAdapter
+from goldreel.audio.credits import CreditsGenerator
+from goldreel.audio.ducking import AudioMixer
+from goldreel.audio.library import MusicLibrary
 from goldreel.config.loader import load_pipeline_config, load_providers_config
 from goldreel.facts.models import FactTable
 from goldreel.render.engine import RenderEngine
@@ -28,6 +31,7 @@ from goldreel.security.checks import scan_for_secrets
 from goldreel.state.store import StateStore, compute_content_hash
 from goldreel.topics.finder import AngleFinder
 from goldreel.topics.history import TopicHistory
+from goldreel.voice.piper import PiperWrapper
 
 app = typer.Typer(
     name="goldreel",
@@ -237,7 +241,42 @@ def make(
             facts_hash=compute_content_hash(fact_table.model_dump()),
         )
 
-    # Stage 6: Render (Stream frames to FFmpeg)
+    # Stage 6: Voice (Piper TTS and Sentence Timing Solver)
+    job.mark_stage_start("voice")
+    piper = PiperWrapper()
+    voice_track = piper.generate_narration(script, job.job_dir / "voice.wav")
+    job.register_existing_file(voice_track.audio_path)
+    job.save_artifact("voice_timings.json", voice_track.model_dump(mode="json"))
+    job.mark_stage_completed(
+        "voice",
+        metadata={
+            "duration_sec": voice_track.total_duration_sec,
+            "sentence_count": len(voice_track.sentences),
+        },
+    )
+
+    # Stage 7: Audio (Music selection, ducking, and credits)
+    job.mark_stage_start("audio")
+    music_lib = MusicLibrary()
+    music_track = music_lib.select_track(lane=lane)
+    mixer = AudioMixer()
+    mixed_audio = mixer.mix_and_duck(
+        voice_path=voice_track.audio_path,
+        music_path=music_track.filepath if music_track.filepath.exists() else None,
+        output_path=job.job_dir / "audio_mixed.mp3",
+        target_loudness_lufs=pipe_cfg.quality_control.target_loudness_lufs,
+        max_true_peak_dbfs=pipe_cfg.quality_control.max_true_peak_dbfs,
+    )
+    job.register_existing_file(mixed_audio)
+    credits_text = CreditsGenerator.generate_description_credits(fact_table, music_track)
+    outro_credit = CreditsGenerator.generate_outro_credit(fact_table, music_track)
+    job.save_artifact("credits.txt", credits_text)
+    job.mark_stage_completed(
+        "audio",
+        metadata={"music_title": music_track.title, "outro_credit": outro_credit},
+    )
+
+    # Stage 8: Render (Stream frames to FFmpeg with muxed audio)
     job.mark_stage_start("render")
     engine = RenderEngine()
     template = (
@@ -245,11 +284,18 @@ def make(
         if (candidates and candidates[0].angle_id == "stat_race") or format_type == "landscape"
         else RankedCountdownTemplate()
     )
-    # Render preview segment (3 seconds) in dry-run, or full duration
-    dur_sec = 3.0 if dry_run else script.estimated_duration_sec
+    # Render preview segment (3 seconds) in dry-run, or voice track duration
+    dur_sec = 3.0 if dry_run else voice_track.total_duration_sec
     render_script = script.model_copy(update={"estimated_duration_sec": dur_sec})
     out_video = job.job_dir / "video.mp4"
-    stats = engine.render(template, fact_table, render_script, out_video, fps=24)
+    stats = engine.render(
+        template=template,
+        fact_table=fact_table,
+        script=render_script,
+        output_path=out_video,
+        fps=24,
+        audio_path=mixed_audio,
+    )
     job.register_existing_file(out_video)
     job.mark_stage_completed(
         "render",

@@ -22,4 +22,3 @@ __all__ = [
     "ease_out_quad",
     "linear",
 ]
-

@@ -103,4 +103,3 @@ def test_render_engine_ffmpeg_pipe(tmp_path):
     assert out_mp4.stat().st_size > 1000
     assert stats.total_frames == 24
     assert stats.peak_ram_mb < 500.0  # Peak RAM should be well under 500 MB
-

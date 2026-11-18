@@ -34,4 +34,3 @@ def ease_in_out_quad(t: float) -> float:
     if t < 0.5:
         return 2.0 * t * t
     return 1.0 - ((-2.0 * t + 2.0) ** 2) / 2.0
-

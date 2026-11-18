@@ -7,8 +7,6 @@ Measures:
 
 import json
 from pathlib import Path
-import time
-import tracemalloc
 
 from goldreel.adapters.cricsheet import CricsheetAdapter
 from goldreel.adapters.wikidata import WikidataComicAdapter
@@ -32,7 +30,9 @@ def run_benchmarks(output_dir: Path | str = "out/benchmark"):
         sports_facts = CricsheetAdapter().extract_facts(json.load(f))
 
     router = ProviderRouter()
-    script_3min = router.generate_script(sports_facts, format_type="landscape", target_duration_sec=180)
+    script_3min = router.generate_script(
+        sports_facts, format_type="landscape", target_duration_sec=180
+    )
     template_race = StatRaceTemplate(seed=42)
 
     mp4_3min = out_path / "benchmark_3min_landscape.mp4"
@@ -55,7 +55,9 @@ def run_benchmarks(output_dir: Path | str = "out/benchmark"):
     with open("tests/fixtures/SAMPLE_wikidata_comic.json", encoding="utf-8") as f:
         comic_facts = WikidataComicAdapter().extract_facts(json.load(f))
 
-    script_short = router.generate_script(comic_facts, format_type="portrait", target_duration_sec=45)
+    script_short = router.generate_script(
+        comic_facts, format_type="portrait", target_duration_sec=45
+    )
     portrait_layout = LandscapeLayout(width=1080, height=1920, margin=60)
     template_short = RankedCountdownTemplate(layout=portrait_layout, seed=99)
 
@@ -79,4 +81,3 @@ def run_benchmarks(output_dir: Path | str = "out/benchmark"):
 
 if __name__ == "__main__":
     run_benchmarks()
-

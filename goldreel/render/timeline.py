@@ -27,4 +27,3 @@ class Timeline:
 
     def frame_at_time(self, time_sec: float) -> int:
         return int(round(time_sec * self.fps))
-

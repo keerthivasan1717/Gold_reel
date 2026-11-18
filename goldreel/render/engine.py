@@ -44,6 +44,7 @@ class RenderEngine:
         script: GeneratedScript,
         output_path: Path | str,
         fps: int = 30,
+        audio_path: Path | str | None = None,
         progress_callback: Callable[[int, int], None] | None = None,
     ) -> RenderStats:
         """Render entire video from template and stream frames to FFmpeg."""
@@ -69,15 +70,33 @@ class RenderEngine:
             "-r",
             str(fps),
             "-i",
-            "-",  # Read from stdin
-            "-c:v",
-            "libx264",
-            "-preset",
-            "veryfast",
-            "-pix_fmt",
-            "yuv420p",
-            str(out_file),
+            "-",  # Read video frames from stdin
         ]
+
+        if audio_path and Path(audio_path).exists():
+            cmd.extend(
+                [
+                    "-i",
+                    str(Path(audio_path).resolve()),
+                    "-c:a",
+                    "aac",
+                    "-b:a",
+                    "192k",
+                    "-shortest",
+                ]
+            )
+
+        cmd.extend(
+            [
+                "-c:v",
+                "libx264",
+                "-preset",
+                "veryfast",
+                "-pix_fmt",
+                "yuv420p",
+                str(out_file),
+            ]
+        )
 
         logger.info("Starting FFmpeg pipeline: %s", " ".join(cmd))
         proc = subprocess.Popen(
