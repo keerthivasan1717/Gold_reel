@@ -14,8 +14,8 @@ from goldreel.qc.models import FrameAudit, QCCheckItem
 class FrameQC:
     """Automated visual inspection of rendered video frames."""
 
-    def __init__(self, sample_count: int = 6):
-        self.sample_count = max(sample_count, 6)
+    def __init__(self, sample_count: int = 10):
+        self.sample_count = max(sample_count, 10)
 
     def get_video_duration(self, video_path: Path) -> float:
         """Get video duration in seconds using ffprobe."""
@@ -39,10 +39,10 @@ class FrameQC:
     def extract_sample_frames(
         self, video_path: Path, output_dir: Path | None = None
     ) -> list[tuple[float, Image.Image, Path | None]]:
-        """Extract sample frames evenly distributed across the video."""
+        """Extract 10 sample frames evenly distributed across the video."""
         dur = self.get_video_duration(video_path)
-        # 6 canonical inspection points: 5%, 20%, 40%, 60%, 80%, 95%
-        ratios = [0.05, 0.20, 0.40, 0.60, 0.80, 0.95]
+        # 10 canonical inspection points: 5%, 15%, 25%, 35%, 45%, 55%, 65%, 75%, 85%, 95%
+        ratios = [0.05, 0.15, 0.25, 0.35, 0.45, 0.55, 0.65, 0.75, 0.85, 0.95]
         timestamps = [round(max(0.1, r * dur), 2) for r in ratios]
 
         if output_dir:
@@ -73,7 +73,7 @@ class FrameQC:
                 img = Image.open(io.BytesIO(proc.stdout)).convert("RGB")
                 saved_path: Path | None = None
                 if output_dir:
-                    saved_path = output_dir / f"frame_{idx:02d}_{t:.2f}s.png"
+                    saved_path = output_dir / f"frame_{idx + 1:02d}_{t:.2f}s.png"
                     img.save(saved_path)
                 frames.append((t, img, saved_path))
             except Exception:
@@ -258,7 +258,43 @@ class FrameQC:
                 )
             )
 
-        # Freeze check (compare 2nd and 5th frames if available)
+        # Freeze and Continuous Motion Gate
+        if len(frames) >= 2:
+            pair_diffs: list[float] = []
+            identical_pairs = 0
+            for i in range(len(frames) - 1):
+                f1 = frames[i][1]
+                f2 = frames[i + 1][1]
+                diff = ImageChops.difference(f1, f2)
+                d_stat = ImageStat.Stat(diff.convert("L"))
+                m_diff = d_stat.mean[0]
+                pair_diffs.append(m_diff)
+                if m_diff < 0.15:
+                    identical_pairs += 1
+
+            avg_pair_diff = sum(pair_diffs) / len(pair_diffs) if pair_diffs else 0.0
+            identical_ratio = identical_pairs / len(pair_diffs) if pair_diffs else 1.0
+
+            # Compute difference between earliest frame and latest frame
+            span_diff = ImageChops.difference(frames[0][1], frames[-1][1])
+            span_mean = ImageStat.Stat(span_diff.convert("L")).mean[0]
+
+            is_diverse = (avg_pair_diff >= 0.35) and (identical_ratio <= 0.60) and (span_mean >= 2.0)
+
+            checks.append(
+                QCCheckItem(
+                    name="continuous_motion_diversity",
+                    category="frame",
+                    passed=is_diverse,
+                    severity="critical",
+                    message="Continuous motion and scene transitions confirmed across sampled frames"
+                    if is_diverse
+                    else f"Video frames are mostly identical (avg step diff: {avg_pair_diff:.2f}, span diff: {span_mean:.2f}, identical pairs: {identical_ratio*100:.0f}%). Continuous animation required.",
+                    measured_value=round(avg_pair_diff, 2),
+                    target_value=">= 0.35",
+                )
+            )
+
         if len(frames) >= 4:
             f_early = frames[1][1]
             f_late = frames[-2][1]

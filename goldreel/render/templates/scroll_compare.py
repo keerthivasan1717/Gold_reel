@@ -85,7 +85,7 @@ class ScrollCompareTemplate(BaseTemplate):
 
         # Header (84px display title per DESIGN.md portrait rules)
         font_title = self.p_layout.get_font("display", 84)
-        font_sub = self.p_layout.get_font("regular", 28)
+        font_sub = self.p_layout.get_font("bold", 36)
 
         draw.text(
             (self.p_layout.header_x, self.p_layout.header_y),

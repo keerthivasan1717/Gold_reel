@@ -177,6 +177,7 @@ class QualityGate:
             entities=entities,
             facts_hash=facts_hash,
             exclude_job_id=job.job_id,
+            is_dry_run=dry_run,
         )
         checks.extend(sim_checks)
 

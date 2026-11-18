@@ -24,8 +24,11 @@ class MusicTrack:
 class MusicLibrary:
     """Manages licensed music assets."""
 
-    def __init__(self, licenses_csv: Path | str = "assets/music/licenses.csv"):
-        self.licenses_csv = Path(licenses_csv).resolve()
+    def __init__(self, licenses_csv: Path | str = "assets/music/library.csv"):
+        p = Path(licenses_csv).resolve()
+        if not p.exists():
+            p = Path("assets/music/licenses.csv").resolve()
+        self.licenses_csv = p
         self.tracks: list[MusicTrack] = []
         self._load()
 

@@ -68,6 +68,38 @@ def test_frame_qc_blank_frame_detection():
     assert all(not a.passed for a in audits)
 
 
+def test_frame_qc_detects_static_identical_frames():
+    """Verify FrameQC flags and fails videos with mostly identical or static frozen frames."""
+    qc = FrameQC(sample_count=10)
+    # Generate identical frames (frozen card)
+    frozen_img = Image.new("RGB", (1080, 1920), Colors.rgb_bg)
+    draw = ImageDraw.Draw(frozen_img)
+    draw.text((120, 100), "Frozen Video Title", fill=Colors.rgb_gold)
+    draw.rectangle([120, 300, 800, 360], fill=Colors.rgb_gold)
+
+    static_frames = [(float(i), frozen_img.copy(), None) for i in range(10)]
+    checks, _ = qc.check(static_frames, format_type="portrait")
+
+    div_check = next(c for c in checks if c.name == "continuous_motion_diversity")
+    assert div_check.passed is False
+    assert div_check.severity == "critical"
+    assert "mostly identical" in div_check.message
+
+    # Generate dynamically animated frames (bars growing, counters ticking)
+    dynamic_frames = []
+    for i in range(10):
+        img = Image.new("RGB", (1080, 1920), Colors.rgb_bg)
+        d = ImageDraw.Draw(img)
+        d.text((120, 100), f"Dynamic Frame {i}", fill=Colors.rgb_gold)
+        # Animate bar growing significantly each frame
+        d.rectangle([120, 300, 150 + i * 80, 420], fill=Colors.rgb_gold)
+        dynamic_frames.append((float(i), img, None))
+
+    dyn_checks, _ = qc.check(dynamic_frames, format_type="portrait")
+    dyn_div_check = next(c for c in dyn_checks if c.name == "continuous_motion_diversity")
+    assert dyn_div_check.passed is True
+
+
 def test_frame_qc_safe_margins_and_palette():
     """Verify FrameQC passes compliant black-and-gold frames."""
     qc = FrameQC(sample_count=6)

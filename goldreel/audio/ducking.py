@@ -17,6 +17,42 @@ class AudioMixer:
     def __init__(self, ffmpeg_bin: str = "ffmpeg"):
         self.ffmpeg_bin = ffmpeg_bin
 
+    def prepare_music_track(
+        self,
+        music_path: Path | str,
+        duration_sec: float,
+        output_path: Path | str,
+        target_loudness_lufs: float = -14.0,
+        max_true_peak_dbfs: float = -1.0,
+        fade_out_sec: float = 2.0,
+    ) -> Path:
+        """Prepare normalized music-only audio track with end fade-out per docs/DESIGN.md."""
+        m_file = Path(music_path).resolve()
+        out_file = Path(output_path).resolve()
+        out_file.parent.mkdir(parents=True, exist_ok=True)
+
+        fade_start = max(0.0, duration_sec - fade_out_sec)
+        filter_str = (
+            f"atrim=0:{duration_sec},"
+            f"afade=t=out:st={fade_start:.2f}:d={fade_out_sec:.2f},"
+            f"loudnorm=I={target_loudness_lufs}:TP={max_true_peak_dbfs}:LRA=7"
+        )
+        cmd = [
+            self.ffmpeg_bin,
+            "-y",
+            "-i",
+            str(m_file),
+            "-af",
+            filter_str,
+            "-c:a",
+            "libmp3lame",
+            "-b:a",
+            "192k",
+            str(out_file),
+        ]
+        subprocess.run(cmd, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        return out_file
+
     def mix_and_duck(
         self,
         voice_path: Path | str,

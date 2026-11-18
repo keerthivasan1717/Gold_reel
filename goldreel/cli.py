@@ -168,6 +168,9 @@ def make(
     publish: bool = typer.Option(
         False, "--publish", "-p", help="Publish directly to YouTube if QC passes"
     ),
+    voice: bool = typer.Option(
+        False, "--voice/--no-voice", help="Enable voice narration (default: music only)"
+    ),
     job_id: str | None = typer.Option(None, "--job-id", help="Resume an existing job or start new"),
 ) -> None:
     """Run full pipeline: ingest -> facts -> topics -> script -> voice -> render -> qc."""
@@ -257,39 +260,65 @@ def make(
                 facts_hash=compute_content_hash(fact_table.model_dump()),
             )
 
-    # Stage 6: Voice (Piper TTS and Sentence Timing Solver)
+    # Stage 6: Voice (Piper TTS if enabled, or music-only mode)
     job.mark_stage_start("voice")
-    piper = PiperWrapper()
-    voice_track = piper.generate_narration(script, job.job_dir / "voice.wav")
-    job.register_existing_file(voice_track.audio_path)
-    job.save_artifact("voice_timings.json", voice_track.model_dump(mode="json"))
-    job.mark_stage_completed(
-        "voice",
-        metadata={
-            "duration_sec": voice_track.total_duration_sec,
-            "sentence_count": len(voice_track.sentences),
-        },
-    )
+    if voice:
+        piper = PiperWrapper()
+        voice_track = piper.generate_narration(script, job.job_dir / "voice.wav")
+        job.register_existing_file(voice_track.audio_path)
+        job.save_artifact("voice_timings.json", voice_track.model_dump(mode="json"))
+        target_dur_sec = voice_track.total_duration_sec
+        job.mark_stage_completed(
+            "voice",
+            metadata={
+                "mode": "tts_voice",
+                "duration_sec": voice_track.total_duration_sec,
+                "sentence_count": len(voice_track.sentences),
+            },
+        )
+    else:
+        target_dur_sec = 30.0
+        job.mark_stage_completed(
+            "voice",
+            metadata={"mode": "music_only", "duration_sec": target_dur_sec},
+        )
 
-    # Stage 7: Audio (Music selection, ducking, and credits)
+    # Stage 7: Audio (Music selection, loudness normalization, fade out, credits)
     job.mark_stage_start("audio")
     music_lib = MusicLibrary()
     music_track = music_lib.select_track(lane=lane)
     mixer = AudioMixer()
-    mixed_audio = mixer.mix_and_duck(
-        voice_path=voice_track.audio_path,
-        music_path=music_track.filepath if music_track.filepath.exists() else None,
-        output_path=job.job_dir / "audio_mixed.mp3",
-        target_loudness_lufs=pipe_cfg.quality_control.target_loudness_lufs,
-        max_true_peak_dbfs=pipe_cfg.quality_control.max_true_peak_dbfs,
-    )
+    dur_sec = 3.0 if dry_run else target_dur_sec
+
+    if voice:
+        mixed_audio = mixer.mix_and_duck(
+            voice_path=voice_track.audio_path,
+            music_path=music_track.filepath if music_track.filepath.exists() else None,
+            output_path=job.job_dir / "audio_mixed.mp3",
+            target_loudness_lufs=pipe_cfg.quality_control.target_loudness_lufs,
+            max_true_peak_dbfs=pipe_cfg.quality_control.max_true_peak_dbfs,
+        )
+    else:
+        mixed_audio = mixer.prepare_music_track(
+            music_path=music_track.filepath,
+            duration_sec=dur_sec,
+            output_path=job.job_dir / "audio_mixed.mp3",
+            target_loudness_lufs=pipe_cfg.quality_control.target_loudness_lufs,
+            max_true_peak_dbfs=pipe_cfg.quality_control.max_true_peak_dbfs,
+            fade_out_sec=2.0,
+        )
+
     job.register_existing_file(mixed_audio)
     credits_text = CreditsGenerator.generate_description_credits(fact_table, music_track)
     outro_credit = CreditsGenerator.generate_outro_credit(fact_table, music_track)
     job.save_artifact("credits.txt", credits_text)
     job.mark_stage_completed(
         "audio",
-        metadata={"music_title": music_track.title, "outro_credit": outro_credit},
+        metadata={
+            "music_title": music_track.title,
+            "mode": "music_only" if not voice else "voice_and_music",
+            "outro_credit": outro_credit,
+        },
     )
 
     # Stage 8: Render (Stream frames to FFmpeg with muxed audio)
@@ -300,11 +329,10 @@ def make(
     if format_type == "portrait":
         if angle_type in ["scroll_compare", "comic_first_appearances"]:
             template = ScrollCompareTemplate()
-        elif angle_type in ["milestone_anniversary", "milestone"]:
-            template = MilestoneTemplate()
         elif angle_type == "stat_race":
             template = StatRaceTemplate(layout=PortraitLayout())
         else:
+            # Multi-item continuous ranked countdown (replaces one-fact milestone)
             template = RankedCountdownTemplate(layout=PortraitLayout())
     else:
         if angle_type == "ranked_countdown":
@@ -313,8 +341,7 @@ def make(
             template = ScrollCompareTemplate()
         else:
             template = StatRaceTemplate()
-    # Render preview segment (3 seconds) in dry-run, or voice track duration
-    dur_sec = 3.0 if dry_run else voice_track.total_duration_sec
+
     render_script = script.model_copy(update={"estimated_duration_sec": dur_sec})
     out_video = job.job_dir / "video.mp4"
     stats = engine.render(

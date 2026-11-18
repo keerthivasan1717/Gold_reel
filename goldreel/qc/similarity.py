@@ -21,6 +21,7 @@ class SimilarityQC:
         entities: list[str],
         facts_hash: str | None = None,
         exclude_job_id: str | None = None,
+        is_dry_run: bool = False,
     ) -> tuple[list[QCCheckItem], float]:
         """Verify candidate topic against historical records."""
         checks: list[QCCheckItem] = []
@@ -32,8 +33,9 @@ class SimilarityQC:
             exclude_job_id=exclude_job_id,
         )
 
-        passed = not is_dup
-        if passed:
+        passed = not is_dup if not is_dry_run else True
+        severity = "critical" if not is_dry_run else "warning"
+        if not is_dup:
             msg = (
                 f"Topic is unique. Highest historical similarity is {max_sim:.1f}% "
                 f"(threshold: < {self.threshold_percent:.1f}%)"
@@ -41,7 +43,7 @@ class SimilarityQC:
         else:
             msg = (
                 f"Topic similarity of {max_sim:.1f}% against past topic '{dup_id}' "
-                f"exceeds the maximum allowed {self.threshold_percent:.1f}% threshold"
+                f"exceeds {self.threshold_percent:.1f}% threshold (dry_run={is_dry_run})"
             )
 
         checks.append(
@@ -49,7 +51,7 @@ class SimilarityQC:
                 name="topic_similarity_threshold",
                 category="similarity",
                 passed=passed,
-                severity="critical",
+                severity=severity,
                 message=msg,
                 measured_value=round(max_sim, 2),
                 target_value=f"< {self.threshold_percent:.1f}%",
