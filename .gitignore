@@ -1,0 +1,61 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Secrets and local config (Never commit)
+*.env
+*.env.*
+config/local.json
+youtube_credentials.json
+youtube_token.json
+client_secrets.json
+
+# GoldReel run-time data & state
+cache/
+state/
+out/
+docs-site/
+
+# Testing & Tools
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+*.log
+
+# OS & Editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*~

@@ -1,0 +1,26 @@
+{
+  "_notice": "SAMPLE test fixture for comic facts cross-verified across two sources",
+  "topic_id": "spider_man_first_appearance",
+  "lane": "comics",
+  "entity": "Spider-Man (Peter Parker)",
+  "publisher": "Marvel Comics",
+  "creators": ["Stan Lee", "Steve Ditko"],
+  "first_appearance": {
+    "title": "Amazing Fantasy #15",
+    "cover_date": "August 1962",
+    "publication_year": 1962
+  },
+  "sources": [
+    {
+      "name": "wikidata",
+      "source_url": "https://www.wikidata.org/wiki/Q79037",
+      "retrieved_at": "2026-11-18T12:00:00Z"
+    },
+    {
+      "name": "grand_comics_database",
+      "source_url": "https://www.comics.org/issue/17106/",
+      "retrieved_at": "2026-11-18T12:00:00Z"
+    }
+  ],
+  "verification_status": "verified_agreement"
+}

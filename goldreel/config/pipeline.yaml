@@ -1,0 +1,52 @@
+# GoldReel Pipeline Configuration
+pipeline:
+  name: "goldreel"
+  version: "0.1.0"
+
+publishing:
+  # Master kill switch: if false, no network upload will ever be attempted
+  publish_enabled: false
+  # Mode: 'scheduled' (upload private with publishAt) or 'dry_run' or 'restricted_fallback'
+  mode: "scheduled"
+  # Hard safety rate limits (YouTube quota is 10,000 units/day; 1 upload = 1,600 units)
+  max_uploads_per_day: 2
+  max_uploads_per_week: 7
+  # Altered or synthetic content disclosure required by YouTube
+  synthetic_content_disclosure: true
+  made_for_kids: false
+
+production_cadence:
+  # Default weekly outputs
+  target_long_videos_per_week: 2
+  target_shorts_per_week: 5
+  # Duration targets (seconds)
+  long_video_min_duration_sec: 120
+  long_video_max_duration_sec: 180
+  short_video_min_duration_sec: 30
+  short_video_max_duration_sec: 45
+
+lanes:
+  # Open Sports Lane (Cricsheet, football-data.org)
+  sports:
+    enabled: true
+    sources:
+      - name: "cricsheet"
+        enabled: true
+        attribution_required: true
+      - name: "football_data"
+        enabled: true
+        attribution_required: true
+  # Comic Facts Lane (Wikidata CC0 + secondary verification)
+  comics:
+    enabled: true
+    require_two_sources: true
+    artwork_allowed: false
+    sources:
+      - name: "wikidata"
+        enabled: true
+
+quality_control:
+  similarity_threshold_percent: 85.0
+  target_loudness_lufs: -14.0
+  max_true_peak_dbfs: -1.0
+  font_safe_margin_px: 60

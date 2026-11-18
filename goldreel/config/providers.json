@@ -1,0 +1,27 @@
+{
+  "default_chain": ["gemini", "groq"],
+  "providers": {
+    "gemini": {
+      "name": "Google Gemini",
+      "model": "gemini-2.5-flash",
+      "env_key": "GEMINI_API_KEY",
+      "rate_limit": {
+        "requests_per_minute": 15,
+        "requests_per_day": 1500
+      },
+      "max_tokens": 1024,
+      "temperature": 0.2
+    },
+    "groq": {
+      "name": "Groq Llama",
+      "model": "llama-3.3-70b-versatile",
+      "env_key": "GROQ_API_KEY",
+      "rate_limit": {
+        "requests_per_minute": 30,
+        "requests_per_day": 14400
+      },
+      "max_tokens": 1024,
+      "temperature": 0.2
+    }
+  }
+}

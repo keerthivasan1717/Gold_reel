@@ -1,0 +1,16 @@
+{
+  "_notice": "SAMPLE test fixture for cricket facts validation",
+  "topic_id": "ipl_most_centuries",
+  "lane": "sports",
+  "source": "cricsheet",
+  "source_url": "https://cricsheet.org/matches/",
+  "retrieved_at": "2026-11-18T12:00:00Z",
+  "metric": "IPL Centuries (2008-2024)",
+  "records": [
+    {"rank": 1, "name": "Virat Kohli", "value": 8, "unit": "centuries", "team": "Royal Challengers Bengaluru"},
+    {"rank": 2, "name": "Jos Buttler", "value": 7, "unit": "centuries", "team": "Rajasthan Royals"},
+    {"rank": 3, "name": "Chris Gayle", "value": 6, "unit": "centuries", "team": "Royal Challengers Bangalore"},
+    {"rank": 4, "name": "KL Rahul", "value": 4, "unit": "centuries", "team": "Lucknow Super Giants"},
+    {"rank": 5, "name": "David Warner", "value": 4, "unit": "centuries", "team": "Delhi Capitals"}
+  ]
+}

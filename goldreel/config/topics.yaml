@@ -1,0 +1,42 @@
+# Angle & Topic Finding Rules for Sports and Comic Facts
+angles:
+  - id: "stat_race"
+    name: "Historical Stat Race"
+    lane: "sports"
+    description: "Cumulative leaderboard progression over time (e.g. IPL centuries, EPL goals)"
+    min_data_points: 10
+    scoring_weight: 1.2
+    preferred_format: "landscape"
+
+  - id: "ranked_countdown"
+    name: "Ranked Countdown"
+    lane: "sports"
+    description: "Top N record holders by verified metric"
+    min_data_points: 5
+    max_data_points: 10
+    scoring_weight: 1.0
+    preferred_format: "portrait"
+
+  - id: "milestone_anniversary"
+    name: "On This Day / Milestone Watch"
+    lane: "sports"
+    description: "Significant record milestone achieved on today's calendar date"
+    min_data_points: 1
+    scoring_weight: 1.5
+    preferred_format: "portrait"
+
+  - id: "scroll_compare"
+    name: "Scroll Compare Timeline"
+    lane: "comics"
+    description: "Side-by-side timeline of publication runs or first appearances (DC vs Marvel)"
+    min_data_points: 8
+    scoring_weight: 1.1
+    preferred_format: "landscape"
+
+  - id: "comic_first_appearances"
+    name: "First Appearances Timeline"
+    lane: "comics"
+    description: "Chronological publication debuts verified across 2 sources"
+    min_data_points: 5
+    scoring_weight: 1.0
+    preferred_format: "portrait"
