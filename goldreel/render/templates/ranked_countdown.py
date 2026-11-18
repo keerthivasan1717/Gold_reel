@@ -159,7 +159,8 @@ class RankedCountdownTemplate(BaseTemplate):
         # Ticking Counter Value
         counter_prog = ease_out_quad(min(1.0, max(0.0, item_t / 2.5)))
         current_val = current_item["value"] * counter_prog
-        val_str = f"{int(round(current_val)):,}" if current_val.is_integer() else f"{current_val:,.1f}"
+        is_discrete = float(current_item["value"]).is_integer()
+        val_str = f"{int(round(current_val)):,}" if is_discrete else f"{current_val:,.1f}"
 
         font_val_big = self.layout.get_font("display", 130)
         font_unit = self.layout.get_font("display", 44)
@@ -308,7 +309,9 @@ class RankedCountdownTemplate(BaseTemplate):
         # Ticking Counter Value
         counter_prog = ease_out_quad(min(1.0, max(0.0, item_t / 2.5)))
         current_val = current_item["value"] * counter_prog
-        val_str = f"{int(round(current_val)):,} {current_item['unit']}".strip()
+        is_discrete = float(current_item["value"]).is_integer()
+        formatted_val = f"{int(round(current_val)):,}" if is_discrete else f"{current_val:,.1f}"
+        val_str = f"{formatted_val} {current_item['unit']}".strip()
         font_val = self.layout.get_font("display", 72)
         draw.text((card_x + 50, card_y + 225), val_str, fill=Colors.rgb_gold_light, font=font_val)
 

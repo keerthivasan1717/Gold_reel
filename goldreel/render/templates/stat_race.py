@@ -147,7 +147,8 @@ class StatRaceTemplate(BaseTemplate):
             draw.rectangle([margin + bar_w - 8, bar_y, margin + bar_w, bar_y + bar_h], fill=Colors.rgb_gold_light)
 
             # Value text right of bar
-            val_text = f"{int(round(current_val)):,}" if current_val.is_integer() else f"{current_val:,.1f}"
+            is_discrete = float(item["value"]).is_integer()
+            val_text = f"{int(round(current_val)):,}" if is_discrete else f"{current_val:,.1f}"
             draw.text((margin + bar_w + 18, bar_y + 4), val_text, fill=Colors.rgb_gold if is_leader else Colors.rgb_ivory, font=font_val)
 
         # 3. Lower Analytical Insight Box (y: 1420 - 1730, height 310px)
@@ -227,7 +228,8 @@ class StatRaceTemplate(BaseTemplate):
             draw.rectangle([stage_x + 360 + bar_w - 6, y, stage_x + 360 + bar_w, y + bar_h], fill=Colors.rgb_gold_light)
 
             # Value text
-            val_text = f"{int(round(current_val)):,}" if current_val.is_integer() else f"{current_val:,.1f}"
+            is_discrete = float(item["value"]).is_integer()
+            val_text = f"{int(round(current_val)):,}" if is_discrete else f"{current_val:,.1f}"
             draw.text((stage_x + 375 + bar_w, y + 6), val_text, fill=Colors.rgb_gold if is_leader else Colors.rgb_ivory, font=font_val)
 
         # Axis ticks
