@@ -19,6 +19,9 @@ from goldreel.adapters.football import FootballAdapter
 from goldreel.adapters.wikidata import WikidataComicAdapter
 from goldreel.config.loader import load_pipeline_config, load_providers_config
 from goldreel.facts.models import FactTable
+from goldreel.render.engine import RenderEngine
+from goldreel.render.templates.ranked_countdown import RankedCountdownTemplate
+from goldreel.render.templates.stat_race import StatRaceTemplate
 from goldreel.script.router import ProviderRouter
 from goldreel.script.validator import ScriptValidator
 from goldreel.security.checks import scan_for_secrets
@@ -234,7 +237,35 @@ def make(
             facts_hash=compute_content_hash(fact_table.model_dump()),
         )
 
-    typer.secho(f"[Make] Pipeline completed for job {job.job_id}", fg=typer.colors.GREEN)
+    # Stage 6: Render (Stream frames to FFmpeg)
+    job.mark_stage_start("render")
+    engine = RenderEngine()
+    template = (
+        StatRaceTemplate()
+        if (candidates and candidates[0].angle_id == "stat_race") or format_type == "landscape"
+        else RankedCountdownTemplate()
+    )
+    # Render preview segment (3 seconds) in dry-run, or full duration
+    dur_sec = 3.0 if dry_run else script.estimated_duration_sec
+    render_script = script.model_copy(update={"estimated_duration_sec": dur_sec})
+    out_video = job.job_dir / "video.mp4"
+    stats = engine.render(template, fact_table, render_script, out_video, fps=24)
+    job.register_existing_file(out_video)
+    job.mark_stage_completed(
+        "render",
+        metadata={
+            "duration_sec": stats.duration_sec,
+            "fps": stats.fps,
+            "frames": stats.total_frames,
+            "render_speed_fps": round(stats.fps_render_speed, 1),
+            "peak_ram_mb": round(stats.peak_ram_mb, 2),
+        },
+    )
+
+    typer.secho(
+        f"[Make] Pipeline completed for job {job.job_id} ({stats.total_frames} frames rendered in {stats.elapsed_time_sec:.1f}s)",
+        fg=typer.colors.GREEN,
+    )
 
 
 @app.command()
