@@ -44,3 +44,4 @@ jobs:
         run: |
           DRY_RUN="${{ github.event.inputs.dry_run || 'false' }}"
           python -m goldreel.cli make --dry-run "$DRY_RUN"
+

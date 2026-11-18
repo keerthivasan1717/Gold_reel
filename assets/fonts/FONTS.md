@@ -12,3 +12,4 @@
    - Creator: Ryoichi Tsunekawa / Dharma Type
    - Homepage: https://fonts.google.com/specimen/Bebas+Neue
    - Usage: Display titles and major countdown ranks.
+

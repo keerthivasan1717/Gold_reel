@@ -1,0 +1,12 @@
+{
+  "league": "Premier League",
+  "season": "2023-2024",
+  "source_url": "https://github.com/openfootball",
+  "scorers": [
+    {"name": "Erling Haaland", "team": "Manchester City", "goals": 27},
+    {"name": "Cole Palmer", "team": "Chelsea", "goals": 22},
+    {"name": "Alexander Isak", "team": "Newcastle United", "goals": 21},
+    {"name": "Phil Foden", "team": "Manchester City", "goals": 19},
+    {"name": "Dominic Solanke", "team": "Bournemouth", "goals": 19}
+  ]
+}

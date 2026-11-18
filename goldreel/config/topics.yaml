@@ -40,3 +40,4 @@ angles:
     min_data_points: 5
     scoring_weight: 1.0
     preferred_format: "portrait"
+

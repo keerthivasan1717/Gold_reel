@@ -34,3 +34,4 @@ python3 -m goldreel.cli report
 ruff check .
 pytest
 ```
+

@@ -1,0 +1,28 @@
+{
+  "info": {
+    "match_type": "IPL",
+    "season": "2016",
+    "teams": ["Royal Challengers Bangalore", "Gujarat Lions"],
+    "dates": ["2016-05-14"]
+  },
+  "innings": [
+    {
+      "team": "Royal Challengers Bangalore",
+      "overs": [
+        {
+          "over": 0,
+          "deliveries": [
+            {"batter": "Virat Kohli", "bowler": "Praveen Kumar", "runs": {"batter": 50, "extras": 0, "total": 50}}
+          ]
+        },
+        {
+          "over": 1,
+          "deliveries": [
+            {"batter": "Virat Kohli", "bowler": "Dhawal Kulkarni", "runs": {"batter": 59, "extras": 0, "total": 59}},
+            {"batter": "AB de Villiers", "bowler": "Dhawal Kulkarni", "runs": {"batter": 129, "extras": 0, "total": 129}}
+          ]
+        }
+      ]
+    }
+  ]
+}

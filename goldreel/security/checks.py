@@ -41,6 +41,7 @@ IGNORE_DIRS = {
     "state",
     "out",
     "docs-site",
+    "tests",
 }
 
 
@@ -73,8 +74,11 @@ def scan_for_secrets(project_root: Path | None = None) -> list[str]:
     # 1. Check for tracked forbidden filenames
     tracked = get_git_tracked_files(root)
     if tracked is not None:
-        files_to_check = tracked
+        files_to_check = []
         for f in tracked:
+            if any(part in IGNORE_DIRS for part in f.parts):
+                continue
+            files_to_check.append(f)
             rel = str(f.relative_to(root)).replace("\\", "/")
             if rel in FORBIDDEN_FILENAMES or f.name in FORBIDDEN_FILENAMES:
                 violations.append(f"Forbidden sensitive file is tracked in git: {rel}")

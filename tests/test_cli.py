@@ -29,7 +29,7 @@ def test_cli_make_dry_run():
     result = runner.invoke(app, ["make", "--dry-run", "--lane", "sports"])
     assert result.exit_code == 0
     assert "[Make] Starting production" in result.stdout
-    assert "simulation completed" in result.stdout
+    assert "Pipeline completed" in result.stdout
 
 
 def test_cli_qc_and_publish():

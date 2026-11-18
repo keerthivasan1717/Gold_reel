@@ -1,0 +1,46 @@
+{
+  "items": [
+    {
+      "primary": {
+        "entity": "Spider-Man",
+        "publisher": "Marvel Comics",
+        "first_appearance_title": "Amazing Fantasy #15",
+        "publication_year": 1962,
+        "cover_date": "August 1962",
+        "creators": ["Stan Lee", "Steve Ditko"],
+        "source_name": "wikidata",
+        "source_url": "https://www.wikidata.org/wiki/Q79037"
+      },
+      "secondary": {
+        "entity": "Spider-Man",
+        "publisher": "Marvel Comics",
+        "first_appearance_title": "Amazing Fantasy 15",
+        "publication_year": 1962,
+        "cover_date": "August 1962",
+        "source_name": "grand_comics_database",
+        "source_url": "https://www.comics.org/issue/17106/"
+      }
+    },
+    {
+      "primary": {
+        "entity": "Batman",
+        "publisher": "DC Comics",
+        "first_appearance_title": "Detective Comics #27",
+        "publication_year": 1939,
+        "cover_date": "May 1939",
+        "creators": ["Bob Kane", "Bill Finger"],
+        "source_name": "wikidata",
+        "source_url": "https://www.wikidata.org/wiki/Q2695156"
+      },
+      "secondary": {
+        "entity": "Batman",
+        "publisher": "DC Comics",
+        "first_appearance_title": "Detective Comics 27",
+        "publication_year": 1939,
+        "cover_date": "May 1939",
+        "source_name": "grand_comics_database",
+        "source_url": "https://www.comics.org/issue/435/"
+      }
+    }
+  ]
+}

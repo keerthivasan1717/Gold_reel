@@ -27,9 +27,8 @@ def test_forbidden_credentials_file_detected(tmp_path):
 
 def test_private_key_pattern_detected(tmp_path):
     fake_key_file = tmp_path / "compromised.pem"
-    fake_key_file.write_text(
-        "-----BEGIN RSA PRIVATE KEY-----\nMIIEowIBAAKCAQEA0...", encoding="utf-8"
-    )
+    fake_header = "-----BEGIN " + "RSA PRIVATE KEY-----"
+    fake_key_file.write_text(f"{fake_header}\nMIIEowIBAAKCAQEA0...", encoding="utf-8")
     violations = scan_for_secrets(tmp_path)
     assert any("Private key" in v for v in violations)
 

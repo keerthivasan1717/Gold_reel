@@ -31,3 +31,4 @@ jobs:
       - name: Run pipeline report
         run: |
           python -m goldreel.cli report
+
