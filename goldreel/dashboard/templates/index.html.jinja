@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ vm.channel_name }} — Automated Publishing Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="header">
+        <div class="brand">
+            <div class="brand-badge">SYSTEM MONITOR</div>
+            <h1 class="brand-title">{{ vm.channel_name }}</h1>
+            <p class="brand-subtitle">Headless Black & Gold Open Data Video Publisher</p>
+        </div>
+        <div class="meta-strip">
+            <div class="meta-item">
+                <span class="meta-label">LAST RUN</span>
+                <span class="meta-val">{{ vm.last_successful_run }}</span>
+            </div>
+            <div class="meta-item">
+                <span class="meta-label">NEXT SCHEDULED RELEASE</span>
+                <span class="meta-val gold">{{ vm.next_scheduled_upload }}</span>
+            </div>
+            <div class="meta-item">
+                <span class="meta-label">PUBLISH MODE</span>
+                <span class="mode-pill mode-{{ vm.publish_mode_tag }}">{{ vm.publish_mode_display }}</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- 1. Pipeline Board -->
+        <section class="section">
+            <div class="section-header">
+                <h2>Latest Pipeline Run: <code>{{ vm.latest_job_id }}</code></h2>
+                <span class="badge">{{ vm.pipeline_stages|length }} Stages Tracked</span>
+            </div>
+            <div class="pipeline-scroll">
+                {% for stage in vm.pipeline_stages %}
+                <div class="stage-card stage-{{ stage.status }}">
+                    <div class="stage-top">
+                        <span class="stage-name">{{ stage.name }}</span>
+                        <span class="stage-icon">
+                            {% if stage.status == 'completed' %}✓{% elif stage.status == 'failed' %}✗{% elif stage.status == 'running' %}⟳{% else %}•{% endif %}
+                        </span>
+                    </div>
+                    <div class="stage-status">{{ stage.status|upper }}</div>
+                    {% if stage.duration_sec is not none %}
+                    <div class="stage-time">{{ stage.duration_sec }}s</div>
+                    {% endif %}
+                    {% if stage.summary %}
+                    <div class="stage-desc">{{ stage.summary }}</div>
+                    {% endif %}
+                    {% if stage.error %}
+                    <div class="stage-err">{{ stage.error }}</div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+
+        <!-- 2. Split: Template Scores & Health -->
+        <div class="split-grid">
+            <!-- Template Performance Scores -->
+            <section class="section panel">
+                <div class="section-header">
+                    <h2>Template Performance</h2>
+                    <span class="badge gold-badge">Autonomous Learning Loop</span>
+                </div>
+                <div class="template-list">
+                    {% for t in vm.template_scores %}
+                    <div class="template-item">
+                        <div class="template-header">
+                            <span class="template-name">{{ t.template_type }}</span>
+                            <span class="template-status status-{{ t.status }}">{{ t.status|upper }}</span>
+                        </div>
+                        <div class="bar-container">
+                            <div class="bar-fill" style="width: {{ t.score }}%;"></div>
+                        </div>
+                        <div class="template-meta">
+                            <span>Score: <strong>{{ t.score }}</strong></span>
+                            <span>Avg Views: <strong>{{ t.avg_views|round|int }}</strong></span>
+                            <span>Retention: <strong>{{ t.avg_retention_percent }}%</strong></span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </section>
+
+            <!-- Health & Safety -->
+            <section class="section panel">
+                <div class="section-header">
+                    <h2>System Health & Safety</h2>
+                    <span class="badge">Operational Checks</span>
+                </div>
+                <div class="health-grid">
+                    <div class="health-card">
+                        <div class="health-label">Cricsheet DB</div>
+                        <div class="health-val green-text">{{ vm.health.cricsheet_freshness }}</div>
+                    </div>
+                    <div class="health-card">
+                        <div class="health-label">Wikidata Graph</div>
+                        <div class="health-val green-text">{{ vm.health.wikidata_freshness }}</div>
+                    </div>
+                    <div class="health-card">
+                        <div class="health-label">YouTube OAuth Token</div>
+                        <div class="health-val {{ 'gold-text' if 'Active' in vm.health.oauth_token_status else 'muted-text' }}">{{ vm.health.oauth_token_status }}</div>
+                    </div>
+                    <div class="health-card">
+                        <div class="health-label">CI Runner Quota</div>
+                        <div class="health-val">{{ vm.health.runner_minutes_used }} / {{ vm.health.runner_monthly_limit }} min</div>
+                    </div>
+                    <div class="health-card">
+                        <div class="health-label">Kill Switch</div>
+                        <div class="health-val {{ 'gold-text' if vm.health.kill_switch_active else 'green-text' }}">
+                            {{ 'ACTIVE (SAFE MODE)' if vm.health.kill_switch_active else 'DISARMED (LIVE)' }}
+                        </div>
+                    </div>
+                    <div class="health-card">
+                        <div class="health-label">Disk Usage</div>
+                        <div class="health-val">{{ vm.health.disk_usage_percent }}%</div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- 3. Queue & Video History -->
+        <section class="section">
+            <div class="section-header">
+                <h2>Production History & Metrics</h2>
+                <span class="badge">{{ vm.videos_history|length }} Videos Produced</span>
+            </div>
+            <div class="table-wrap">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Job ID</th>
+                            <th>Title</th>
+                            <th>Format</th>
+                            <th>Template</th>
+                            <th>Lane</th>
+                            <th>Status</th>
+                            <th>Views</th>
+                            <th>Watch Time</th>
+                            <th>Released / Scheduled</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for v in vm.videos_history %}
+                        <tr>
+                            <td><code>{{ v.job_id[:16] }}</code></td>
+                            <td class="video-title">{{ v.title }}</td>
+                            <td><span class="pill format-{{ v.format_type }}">{{ v.format_type|upper }}</span></td>
+                            <td><code>{{ v.template_type }}</code></td>
+                            <td>{{ v.lane|title }}</td>
+                            <td><span class="pill status-pill status-{{ v.status }}">{{ v.status|upper }}</span></td>
+                            <td class="gold-text"><strong>{{ v.views if v.views is defined else '-' }}</strong></td>
+                            <td>{{ v.watch_time_hours if v.watch_time_hours is defined else '-' }}h</td>
+                            <td class="muted-text">{{ v.published_at[:16]|replace('T', ' ') if v.published_at else '-' }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>GoldReel Automated Headless Publisher • Dashboard updated {{ vm.generated_at }} • No human steps per video</p>
+    </footer>
+</body>
+</html>

@@ -55,3 +55,23 @@ def test_cli_report():
     result = runner.invoke(app, ["report"])
     assert result.exit_code == 0
     assert "GoldReel Pipeline Status" in result.stdout
+
+
+def test_cli_dashboard(tmp_path):
+    out_dir = str(tmp_path / "site")
+    result = runner.invoke(app, ["dashboard", "--output-dir", out_dir])
+    assert result.exit_code == 0
+    assert "[Dashboard] SUCCESS" in result.stdout
+
+
+def test_cli_analytics():
+    result = runner.invoke(app, ["analytics", "--dry-run"])
+    assert result.exit_code == 0
+    assert "[Analytics] Top template" in result.stdout
+
+
+def test_cli_email(tmp_path):
+    out_dir = str(tmp_path / "out_email")
+    result = runner.invoke(app, ["email", "--dry-run", "--out-dir", out_dir])
+    assert result.exit_code == 0
+    assert "[Email] SUCCESS" in result.stdout

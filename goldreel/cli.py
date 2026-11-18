@@ -17,10 +17,14 @@ import typer
 from goldreel.adapters.cricsheet import CricsheetAdapter
 from goldreel.adapters.football import FootballAdapter
 from goldreel.adapters.wikidata import WikidataComicAdapter
+from goldreel.analytics.client import YouTubeAnalyticsClient
+from goldreel.analytics.email_reporter import WeeklyEmailReporter
+from goldreel.analytics.scorer import TemplateScorer
 from goldreel.audio.credits import CreditsGenerator
 from goldreel.audio.ducking import AudioMixer
 from goldreel.audio.library import MusicLibrary
 from goldreel.config.loader import load_pipeline_config, load_providers_config
+from goldreel.dashboard.generator import DashboardGenerator
 from goldreel.facts.models import FactTable
 from goldreel.publish.uploader import YouTubeUploader
 from goldreel.qc.gate import QualityGate
@@ -451,6 +455,55 @@ def report() -> None:
         for j in jobs[:5]:
             status_summary = ", ".join(f"{k}:{v.status}" for k, v in j.stages.items())
             typer.echo(f"  {j.job_id} [{j.created_at}] - {status_summary or 'No stages'}")
+
+
+@app.command()
+def dashboard(
+    out_dir: str = typer.Option("docs-site", "--output-dir", "-o", help="Target output folder"),
+) -> None:
+    """Generate static HTML dashboard for GitHub Pages."""
+    typer.secho(f"[Dashboard] Generating static dashboard in {out_dir}/", fg=typer.colors.BRIGHT_YELLOW)
+    gen = DashboardGenerator(out_dir=out_dir)
+    html_p, css_p = gen.generate()
+    typer.secho(f"[Dashboard] SUCCESS - Generated {html_p} and {css_p}", fg=typer.colors.GREEN, bold=True)
+
+
+@app.command()
+def analytics(
+    pull: bool = typer.Option(True, "--pull", help="Harvest latest video metrics"),
+    dry_run: bool = typer.Option(True, "--dry-run", help="Simulate pull without YouTube API token"),
+) -> None:
+    """Harvest video analytics and compute template performance rankings."""
+    typer.secho(f"[Analytics] Evaluating learning loop (dry_run={dry_run})", fg=typer.colors.BRIGHT_YELLOW)
+    client = YouTubeAnalyticsClient()
+    records = client.pull_metrics(dry_run=dry_run)
+    scorer = TemplateScorer()
+    summary = scorer.generate_learning_summary(records)
+
+    typer.secho(f"[Analytics] Analyzed {len(records)} videos across {len(summary.template_rankings)} templates:", fg=typer.colors.CYAN)
+    for p in summary.template_rankings:
+        color = typer.colors.GREEN if p.status == "favored" else (typer.colors.RED if p.status == "retired" else typer.colors.WHITE)
+        typer.secho(f"  {p.template_type:<18} Score: {p.score:>5.1f} | Avg Views: {p.avg_views:>6.0f} [{p.status.upper()}]", fg=color)
+
+    typer.secho(f"\n[Analytics] Top template: {summary.best_template}", fg=typer.colors.GREEN, bold=True)
+    for act in summary.action_items:
+        typer.echo(f"  • {act}")
+
+
+@app.command()
+def email(
+    out_dir: str = typer.Option("out", "--out-dir", "-o", help="Folder to save email drafts"),
+    dry_run: bool = typer.Option(True, "--dry-run", help="Simulate email generation"),
+) -> None:
+    """Generate weekly owner summary email (text and HTML)."""
+    typer.secho(f"[Email] Generating weekly owner summary email in {out_dir}/", fg=typer.colors.BRIGHT_YELLOW)
+    client = YouTubeAnalyticsClient()
+    records = client.pull_metrics(dry_run=dry_run)
+    scorer = TemplateScorer()
+    summary = scorer.generate_learning_summary(records)
+    reporter = WeeklyEmailReporter()
+    txt_p, html_p = reporter.save_reports(summary, out_dir=out_dir)
+    typer.secho(f"[Email] SUCCESS - Generated {txt_p} and {html_p}", fg=typer.colors.GREEN, bold=True)
 
 
 if __name__ == "__main__":
