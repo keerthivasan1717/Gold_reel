@@ -52,11 +52,16 @@ class MusicLibrary:
                     )
                 )
 
-    def select_track(self, lane: str = "sports") -> MusicTrack:
-        """Select appropriate background music track for the lane."""
+    def select_track(self, lane: str = "sports", query: str | None = None) -> MusicTrack:
+        """Select appropriate background music track for the lane or query."""
         if not self.tracks:
             raise RuntimeError("No licensed music tracks found in assets/music/licenses.csv")
-        # Return first track that exists on disk, or fallback to first entry
+        if query:
+            q_lower = query.lower()
+            for t in self.tracks:
+                if q_lower in t.title.lower() or q_lower in t.artist.lower():
+                    if t.filepath.exists():
+                        return t
         for t in self.tracks:
             if t.filepath.exists():
                 return t

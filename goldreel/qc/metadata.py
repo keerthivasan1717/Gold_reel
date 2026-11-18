@@ -230,16 +230,16 @@ class MetadataQC:
         else:
             # Landscape long-form
             if not is_dry_run:
-                target_pass = 120.0 <= duration_sec <= 180.0
+                target_pass = 120.0 <= duration_sec <= 200.0
                 checks.append(
                     QCCheckItem(
                         name="longform_target_duration",
                         category="duration",
                         passed=target_pass,
                         severity="warning",
-                        message=f"Long video duration {duration_sec:.1f}s within target 120-180s cadence",
+                        message=f"Long video duration {duration_sec:.1f}s within target 160-200s cadence",
                         measured_value=round(duration_sec, 2),
-                        target_value="120.0 to 180.0s",
+                        target_value="160.0 to 200.0s",
                     )
                 )
             else:

@@ -1,4 +1,7 @@
 title,artist,licence,url,attribution_required,attribution_text,filepath
-"Midnight Gold","GoldReel Soundworks","CC0 1.0 Universal","https://creativecommons.org/publicdomain/zero/1.0/",false,"","assets/music/midnight_gold.mp3"
-"Cinematic Tension","Kevin MacLeod","CC-BY 4.0","https://incompetech.com/","true","Music: Cinematic Tension by Kevin MacLeod (incompetech.com) Licensed under CC-BY 4.0","assets/music/cinematic_tension.mp3"
-
+"Volatile Reaction","Kevin MacLeod","CC-BY 4.0","https://incompetech.com/","true","Music: Volatile Reaction by Kevin MacLeod (incompetech.com) Licensed under CC-BY 4.0","assets/music/volatile_reaction.mp3"
+"Echoes of Lumen","Echoes of Lumen","Pixabay License","https://pixabay.com/music/search/ominous/","false","Music provided by Pixabay under Pixabay Content License","assets/music/echoes_of_lumen-ominous-music-595730.mp3"
+"Hitman","Kevin MacLeod","CC-BY 4.0","https://incompetech.com/","true","Music: Hitman by Kevin MacLeod (incompetech.com) Licensed under CC-BY 4.0","assets/music/hitman.mp3"
+"AtlasAudio Ominous","AtlasAudio","Pixabay License","https://pixabay.com/music/search/ominous/","false","Music provided by Pixabay under Pixabay Content License","assets/music/atlasaudio-ominous-511876.mp3"
+"Dark Shadows","Alex Morgan","Pixabay License","https://pixabay.com/music/search/ominous/","false","Music provided by Pixabay under Pixabay Content License","assets/music/alex-morgan-dark-shadows-ominous-underscore-573942.mp3"
+"Midnight Gold","GoldReel Soundworks","CC0 1.0 Universal","https://creativecommons.org/publicdomain/zero/1.0/","false","","assets/music/midnight_gold.mp3"

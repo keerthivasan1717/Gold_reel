@@ -162,6 +162,12 @@ def make(
     format_type: str = typer.Option(
         "landscape", "--format", "-f", help="'landscape' or 'portrait'"
     ),
+    duration: float | None = typer.Option(
+        None, "--duration", "-d", help="Target video duration in seconds (e.g. 165.0 for 160-200s longform)"
+    ),
+    music: str | None = typer.Option(
+        None, "--music", "-m", help="Music track title or query (e.g. 'volatile', 'echoes')"
+    ),
     dry_run: bool = typer.Option(
         True, "--dry-run/--no-dry-run", help="Run pipeline simulation without network publish"
     ),
@@ -286,7 +292,12 @@ def make(
             },
         )
     else:
-        target_dur_sec = 30.0
+        if duration is not None:
+            target_dur_sec = float(duration)
+        elif format_type == "landscape":
+            target_dur_sec = 165.0  # 165.0s benchmark longform standard (160-200s range)
+        else:
+            target_dur_sec = 45.0  # 45.0s Shorts standard
         job.mark_stage_completed(
             "voice",
             metadata={"mode": "music_only", "duration_sec": target_dur_sec},
@@ -295,7 +306,7 @@ def make(
     # Stage 7: Audio (Music selection, loudness normalization, fade out, credits)
     job.mark_stage_start("audio")
     music_lib = MusicLibrary()
-    music_track = music_lib.select_track(lane=lane)
+    music_track = music_lib.select_track(lane=lane, query=music)
     mixer = AudioMixer()
     dur_sec = 3.0 if dry_run else target_dur_sec
 
