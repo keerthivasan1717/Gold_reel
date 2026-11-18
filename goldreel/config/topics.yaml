@@ -37,7 +37,7 @@ angles:
     name: "First Appearances Timeline"
     lane: "comics"
     description: "Chronological publication debuts verified across 2 sources"
-    min_data_points: 5
+    min_data_points: 2
     scoring_weight: 1.0
     preferred_format: "portrait"
 

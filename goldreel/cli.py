@@ -17,11 +17,14 @@ import typer
 from goldreel.adapters.cricsheet import CricsheetAdapter
 from goldreel.adapters.football import FootballAdapter
 from goldreel.adapters.wikidata import WikidataComicAdapter
-from goldreel.config.loader import load_pipeline_config, load_providers_config, load_topics_config
-from goldreel.facts.gate import FactGate
+from goldreel.config.loader import load_pipeline_config, load_providers_config
 from goldreel.facts.models import FactTable
+from goldreel.script.router import ProviderRouter
+from goldreel.script.validator import ScriptValidator
 from goldreel.security.checks import scan_for_secrets
-from goldreel.state.store import StateStore
+from goldreel.state.store import StateStore, compute_content_hash
+from goldreel.topics.finder import AngleFinder
+from goldreel.topics.history import TopicHistory
 
 app = typer.Typer(
     name="goldreel",
@@ -88,7 +91,6 @@ def plan(
     job_id: str | None = typer.Option(None, "--job-id", help="Optional specific job ID"),
 ) -> None:
     """Discover angles from verified facts and plan script narration."""
-    topics_cfg = load_topics_config()
     store = StateStore()
     if job_id and (store.base_dir / job_id).exists():
         job = store.get_job(job_id)
@@ -100,15 +102,40 @@ def plan(
     )
 
     job.mark_stage_start("topics")
-    matching_angles = [a for a in topics_cfg.angles if a.lane == lane]
+    # Load facts for planning
+    if lane == "comics":
+        facts_path = Path("tests/fixtures/SAMPLE_wikidata_comic.json")
+        adapter = WikidataComicAdapter()
+    else:
+        facts_path = Path("tests/fixtures/SAMPLE_cricket_facts.json")
+        adapter = CricsheetAdapter()
+
+    fact_table = adapter.extract_facts(facts_path)
+    finder = AngleFinder()
+    candidates = finder.find_angles(fact_table, target_format=format_type)
+
+    router = ProviderRouter()
+    script = router.generate_script(fact_table, format_type=format_type)
+
+    validator = ScriptValidator(fact_table)
+    v_res = validator.validate(script)
+
     job.save_artifact(
         "plan_topics.json",
-        {"lane": lane, "format": format_type, "angles": [a.model_dump() for a in matching_angles]},
+        {
+            "lane": lane,
+            "format": format_type,
+            "candidates": [c.name for c in candidates],
+            "script": script.model_dump(),
+            "validation_passed": v_res.passed,
+        },
     )
-    job.mark_stage_completed("topics", metadata={"angle_count": len(matching_angles)})
+    job.mark_stage_completed(
+        "topics", metadata={"candidate_count": len(candidates), "script_words": script.total_words}
+    )
 
     typer.secho(
-        f"[Plan] Topic planning complete for job {job.job_id}. Found {len(matching_angles)} angles.",
+        f"[Plan] Topic planning complete for job {job.job_id}. Found {len(candidates)} candidates.",
         fg=typer.colors.GREEN,
     )
 
@@ -171,32 +198,41 @@ def make(
     job.save_artifact("facts.json", fact_table.model_dump())
     job.mark_stage_completed("facts", metadata={"record_count": len(fact_table.records)})
 
-    # Stage 3: Topics
+    # Stage 3: Topics (Angle finding & deduplication)
     job.mark_stage_start("topics")
-    topics_cfg = load_topics_config()
-    matching_angles = [a for a in topics_cfg.angles if a.lane == lane]
-    job.save_artifact("topics.json", [a.model_dump() for a in matching_angles])
-    job.mark_stage_completed("topics", metadata={"angles_count": len(matching_angles)})
+    history = TopicHistory()
+    finder = AngleFinder(history=history)
+    candidates = finder.find_angles(fact_table, target_format=format_type)
+    job.save_artifact("topics.json", [c.name for c in candidates])
+    job.mark_stage_completed("topics", metadata={"candidates_count": len(candidates)})
 
-    # Stage 4: Fact Gate (Validate fact constraints)
+    # Stage 4: Script Generation
+    job.mark_stage_start("script")
+    router = ProviderRouter()
+    script = router.generate_script(fact_table, format_type=format_type)
+    job.save_artifact("script.json", script.model_dump())
+    job.mark_stage_completed("script", metadata={"word_count": script.total_words})
+
+    # Stage 5: Fact Gate & Script Validation
     job.mark_stage_start("fact_gate")
-    gate = FactGate(fact_table)
-    sample_script = {
-        "hook": f"Leading {fact_table.title}",
-        "narration_scenes": [
-            {
-                "scene_index": 1,
-                "text": f"{fact_table.records[0].entity} ranks number 1 with {fact_table.records[0].value}.",
-            }
-        ],
-    }
-    gate_res = gate.verify_script(sample_script)
-    if not gate_res.passed:
-        job.mark_stage_failed("fact_gate", error=gate_res.summary)
-        typer.secho(f"[Make] Fact Gate failed: {gate_res.summary}", fg=typer.colors.RED)
+    validator = ScriptValidator(fact_table)
+    val_res = validator.validate(script)
+    if not val_res.passed:
+        job.mark_stage_failed("fact_gate", error=val_res.summary)
+        typer.secho(f"[Make] Validation failed: {val_res.summary}", fg=typer.colors.RED)
     else:
-        job.save_artifact("fact_gate_report.json", {"passed": True, "summary": gate_res.summary})
+        job.save_artifact("fact_gate_report.json", {"passed": True, "summary": val_res.summary})
         job.mark_stage_completed("fact_gate", metadata={"passed": True})
+        # Record topic into history to prevent future duplicates
+        history.record_topic(
+            job_id=job.job_id,
+            topic_id=fact_table.topic_id,
+            title=fact_table.title,
+            lane=lane,
+            angle_id=candidates[0].angle_id if candidates else "custom",
+            entities=[r.entity for r in fact_table.records],
+            facts_hash=compute_content_hash(fact_table.model_dump()),
+        )
 
     typer.secho(f"[Make] Pipeline completed for job {job.job_id}", fg=typer.colors.GREEN)
 

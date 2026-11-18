@@ -41,6 +41,69 @@
         "source_name": "grand_comics_database",
         "source_url": "https://www.comics.org/issue/435/"
       }
+    },
+    {
+      "primary": {
+        "entity": "Superman",
+        "publisher": "DC Comics",
+        "first_appearance_title": "Action Comics #1",
+        "publication_year": 1938,
+        "cover_date": "June 1938",
+        "creators": ["Jerry Siegel", "Joe Shuster"],
+        "source_name": "wikidata",
+        "source_url": "https://www.wikidata.org/wiki/Q79015"
+      },
+      "secondary": {
+        "entity": "Superman",
+        "publisher": "DC Comics",
+        "first_appearance_title": "Action Comics 1",
+        "publication_year": 1938,
+        "cover_date": "June 1938",
+        "source_name": "grand_comics_database",
+        "source_url": "https://www.comics.org/issue/172/"
+      }
+    },
+    {
+      "primary": {
+        "entity": "Wonder Woman",
+        "publisher": "DC Comics",
+        "first_appearance_title": "All Star Comics #8",
+        "publication_year": 1941,
+        "cover_date": "December 1941",
+        "creators": ["William Moulton Marston"],
+        "source_name": "wikidata",
+        "source_url": "https://www.wikidata.org/wiki/Q338430"
+      },
+      "secondary": {
+        "entity": "Wonder Woman",
+        "publisher": "DC Comics",
+        "first_appearance_title": "All Star Comics 8",
+        "publication_year": 1941,
+        "cover_date": "December 1941",
+        "source_name": "grand_comics_database",
+        "source_url": "https://www.comics.org/issue/258/"
+      }
+    },
+    {
+      "primary": {
+        "entity": "Iron Man",
+        "publisher": "Marvel Comics",
+        "first_appearance_title": "Tales of Suspense #39",
+        "publication_year": 1963,
+        "cover_date": "March 1963",
+        "creators": ["Stan Lee", "Jack Kirby"],
+        "source_name": "wikidata",
+        "source_url": "https://www.wikidata.org/wiki/Q180703"
+      },
+      "secondary": {
+        "entity": "Iron Man",
+        "publisher": "Marvel Comics",
+        "first_appearance_title": "Tales of Suspense 39",
+        "publication_year": 1963,
+        "cover_date": "March 1963",
+        "source_name": "grand_comics_database",
+        "source_url": "https://www.comics.org/issue/17700/"
+      }
     }
   ]
 }

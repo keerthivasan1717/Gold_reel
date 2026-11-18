@@ -132,12 +132,12 @@ class FactGate:
         elif isinstance(script_data, dict):
             if "hook" in script_data:
                 texts.append(("hook", str(script_data["hook"])))
-            if "narration_scenes" in script_data:
-                for idx, scene in enumerate(script_data["narration_scenes"]):
-                    if isinstance(scene, dict) and "text" in scene:
-                        texts.append((f"scene_{idx + 1}", str(scene["text"])))
-                    elif isinstance(scene, str):
-                        texts.append((f"scene_{idx + 1}", scene))
+            scenes_list = script_data.get("scenes") or script_data.get("narration_scenes") or []
+            for idx, scene in enumerate(scenes_list):
+                if isinstance(scene, dict) and "text" in scene:
+                    texts.append((f"scene_{idx + 1}", str(scene["text"])))
+                elif isinstance(scene, str):
+                    texts.append((f"scene_{idx + 1}", scene))
             if "outro_text" in script_data:
                 texts.append(("outro", str(script_data["outro_text"])))
 

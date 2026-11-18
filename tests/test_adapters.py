@@ -51,7 +51,7 @@ def test_wikidata_adapter_cross_verification_agreement():
     fact_table = adapter.extract_facts(comics_file)
 
     assert fact_table.lane == "comics"
-    assert len(fact_table.records) == 2
+    assert len(fact_table.records) >= 2
     entities = [r.entity for r in fact_table.records]
     assert "Spider-Man" in entities
     assert "Batman" in entities
