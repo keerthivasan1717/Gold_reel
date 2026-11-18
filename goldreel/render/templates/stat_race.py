@@ -11,6 +11,7 @@ Strictly follows docs/DESIGN.md Section 5:
 """
 
 import math
+from pathlib import Path
 from typing import Any
 
 from PIL import Image, ImageDraw
@@ -214,6 +215,49 @@ class StatRaceTemplate(BaseTemplate):
                     seen_groups.add(display_label)
 
             self.entity_colors[entity] = color
+
+    def _get_avatar(self, entity: str, size: int, border_color: Any) -> Image.Image:
+        """Return a circular player photo avatar with border ring, or stylized monogram."""
+        if not hasattr(self, "_avatar_cache"):
+            self._avatar_cache: dict[tuple[str, int, str], Image.Image] = {}
+
+        key = (entity, size, str(border_color))
+        if key in self._avatar_cache:
+            return self._avatar_cache[key]
+
+        slug = entity.lower().replace(" ", "_").replace("-", "_")
+        img_path = Path("assets/images/players") / f"{slug}.png"
+
+        total_size = size + 6
+        avatar = Image.new("RGBA", (total_size, total_size), (0, 0, 0, 0))
+        adraw = ImageDraw.Draw(avatar)
+        r = size // 2
+        cx, cy = r + 3, r + 3
+
+        # Outer glowing ring in bar color
+        adraw.ellipse([cx - r - 2, cy - r - 2, cx + r + 2, cy + r + 2], fill=border_color)
+
+        if img_path.exists():
+            try:
+                with Image.open(img_path) as raw_img:
+                    raw_crop = raw_img.convert("RGBA").resize((size, size), Image.Resampling.LANCZOS)
+                    mask = Image.new("L", (size, size), 0)
+                    mdraw = ImageDraw.Draw(mask)
+                    mdraw.ellipse([0, 0, size, size], fill=255)
+                    avatar.paste(raw_crop, (cx - r, cy - r), mask)
+                self._avatar_cache[key] = avatar
+                return avatar
+            except Exception:
+                pass
+
+        # Stylized monogram fallback
+        adraw.ellipse([cx - r, cy - r, cx + r, cy + r], fill=Colors.rgb_surface_2)
+        initial = entity[0].upper() if entity else "?"
+        font_init = self.layout.get_font("bold", max(14, int(size * 0.5)))
+        adraw.text((cx, cy), initial, fill=border_color, font=font_init, anchor="mm")
+
+        self._avatar_cache[key] = avatar
+        return avatar
 
     def draw(self, t: float) -> Image.Image:
         dur = self.timeline.duration_sec if self.timeline else 30.0
@@ -466,8 +510,15 @@ class StatRaceTemplate(BaseTemplate):
             # Luminous glowing tip
             draw.rounded_rectangle([bar_x_start + bar_w - 8, y_pos, bar_x_start + bar_w, y_pos + bar_height], radius=4, fill="#FFFFFF")
 
-            # Value label directly right of bar
-            val_x = bar_x_start + bar_w + 14
+            # Circular player photo avatar mounted at the leading edge of the bar
+            avatar_img = self._get_avatar(entity, size=bar_height + 4, border_color=bar_color)
+            av_w, av_h = avatar_img.size
+            av_x = bar_x_start + bar_w - (av_w // 2)
+            av_y = y_pos + bar_height // 2 - (av_h // 2)
+            frame.paste(avatar_img, (av_x, av_y), avatar_img)
+
+            # Value label directly right of avatar
+            val_x = av_x + av_w + 10
             draw.text((val_x, name_y), val_text, font=font_val, fill=bar_color, anchor="lm")
 
         # 4. Large Dynamic Year Counter in Bottom Right
@@ -577,10 +628,15 @@ class StatRaceTemplate(BaseTemplate):
             bar_color = self.entity_colors.get(entity, Colors.rgb_gold)
             group_code = self.entity_groups.get(entity, "")
 
-            # Rank & Name
+            # Rank, Photo Avatar & Name
             int_rank = int(round(rank_y)) + 1
             draw.text((margin, slot_y + 8), f"#{int_rank}", fill=Colors.rgb_gold if int_rank == 1 else Colors.rgb_muted, font=font_rank)
-            draw.text((margin + 65, slot_y + 8), entity[:20], fill=Colors.rgb_ivory, font=font_label)
+
+            avatar_row = self._get_avatar(entity, size=46, border_color=bar_color)
+            av_rw, av_rh = avatar_row.size
+            frame.paste(avatar_row, (margin + 60, slot_y + 2), avatar_row)
+
+            draw.text((margin + 120, slot_y + 8), entity[:18], fill=Colors.rgb_ivory, font=font_label)
 
             if group_code:
                 draw.rounded_rectangle([margin + 420, slot_y + 12, margin + 490, slot_y + 44], radius=4, fill=Colors.rgb_surface_2, outline=bar_color, width=1)
@@ -598,8 +654,15 @@ class StatRaceTemplate(BaseTemplate):
             # Glowing tip
             draw.rounded_rectangle([margin + bar_w - 8, bar_y, margin + bar_w, bar_y + bar_h], radius=4, fill="#FFFFFF")
 
-            # Value text right of bar
-            draw.text((margin + bar_w + 18, bar_y + 6), val_text, fill=bar_color, font=font_val)
+            # Circular photo avatar mounted at bar tip
+            avatar_bar = self._get_avatar(entity, size=bar_h + 4, border_color=bar_color)
+            av_bw, av_bh = avatar_bar.size
+            av_bx = margin + bar_w - (av_bw // 2)
+            av_by = bar_y + bar_h // 2 - (av_bh // 2)
+            frame.paste(avatar_bar, (av_bx, av_by), avatar_bar)
+
+            # Value text right of avatar
+            draw.text((av_bx + av_bw + 10, bar_y + 6), val_text, fill=bar_color, font=font_val)
 
         # 3. Dynamic Year Display (y: 1320)
         font_year = self.layout.get_font("display", 96)
