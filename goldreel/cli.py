@@ -465,7 +465,7 @@ def qc(
 @app.command()
 def publish(
     job_id: str = typer.Option(..., "--job-id", "-j", help="Job ID to publish"),
-    dry_run: bool = typer.Option(True, "--dry-run", help="Do not upload to YouTube API"),
+    dry_run: bool = typer.Option(True, "--dry-run/--no-dry-run", help="Do not upload to YouTube API"),
 ) -> None:
     """Publish video to YouTube (scheduled) or package into out/ directory."""
     store = StateStore()

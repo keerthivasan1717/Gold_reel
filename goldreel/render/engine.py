@@ -7,6 +7,7 @@ Peak RAM under 3 GB."
 
 import logging
 import subprocess
+import tempfile
 import time
 import tracemalloc
 from collections.abc import Callable
@@ -59,6 +60,9 @@ class RenderEngine:
         cmd = [
             self.ffmpeg_bin,
             "-y",
+            "-loglevel",
+            "error",
+            "-nostats",
             "-f",
             "rawvideo",
             "-vcodec",
@@ -99,45 +103,47 @@ class RenderEngine:
         )
 
         logger.info("Starting FFmpeg pipeline: %s", " ".join(cmd))
-        proc = subprocess.Popen(
-            cmd,
-            stdin=subprocess.PIPE,
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.PIPE,
-        )
+        with tempfile.TemporaryFile() as stderr_file:
+            proc = subprocess.Popen(
+                cmd,
+                stdin=subprocess.PIPE,
+                stdout=subprocess.DEVNULL,
+                stderr=stderr_file,
+            )
 
-        tracemalloc.start()
-        start_time = time.perf_counter()
+            tracemalloc.start()
+            start_time = time.perf_counter()
 
-        try:
-            for frame_idx in range(total_frames):
-                t = timeline.time_at_frame(frame_idx)
-                # Render single frame
-                frame_img = template.draw(t)
-                # Pipe raw RGB bytes directly to FFmpeg stdin
-                proc.stdin.write(frame_img.tobytes())
-                del frame_img  # Explicitly release image buffer
+            try:
+                for frame_idx in range(total_frames):
+                    t = timeline.time_at_frame(frame_idx)
+                    # Render single frame
+                    frame_img = template.draw(t)
+                    # Pipe raw RGB bytes directly to FFmpeg stdin
+                    proc.stdin.write(frame_img.tobytes())
+                    del frame_img  # Explicitly release image buffer
 
-                if progress_callback and frame_idx % 30 == 0:
-                    progress_callback(frame_idx, total_frames)
+                    if progress_callback and frame_idx % 30 == 0:
+                        progress_callback(frame_idx, total_frames)
 
-            proc.stdin.close()
-            proc.wait()
+                proc.stdin.close()
+                proc.wait()
 
-            if proc.returncode != 0:
-                stderr_output = proc.stderr.read().decode("utf-8", errors="replace")
-                raise RuntimeError(
-                    f"FFmpeg render failed with exit code {proc.returncode}: {stderr_output}"
-                )
+                if proc.returncode != 0:
+                    stderr_file.seek(0)
+                    stderr_output = stderr_file.read().decode("utf-8", errors="replace")
+                    raise RuntimeError(
+                        f"FFmpeg render failed with exit code {proc.returncode}: {stderr_output}"
+                    )
 
-        finally:
-            current, peak = tracemalloc.get_traced_memory()
-            tracemalloc.stop()
-            if proc.stdin and not proc.stdin.closed:
-                try:
-                    proc.stdin.close()
-                except Exception:
-                    pass
+            finally:
+                current, peak = tracemalloc.get_traced_memory()
+                tracemalloc.stop()
+                if proc.stdin and not proc.stdin.closed:
+                    try:
+                        proc.stdin.close()
+                    except Exception:
+                        pass
 
         elapsed = time.perf_counter() - start_time
         speed = total_frames / elapsed if elapsed > 0 else 0.0
