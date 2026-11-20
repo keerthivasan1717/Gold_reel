@@ -534,19 +534,6 @@ class StatRaceTemplate(BaseTemplate):
             bar_w = max(6, target_bar_w)
             draw.rounded_rectangle([bar_x_start, y_pos, bar_x_start + bar_w, y_pos + bar_height], radius=6, fill=bar_color)
 
-            # Traveling luminous energy sweep across active bar (shifts every frame with t)
-            sweep_offset = int((t * 260 + rank_y * 45) % max(14, bar_w))
-            sweep_x = bar_x_start + sweep_offset
-            if sweep_x < bar_x_start + bar_w - 8:
-                draw.rounded_rectangle(
-                    [sweep_x, y_pos + 4, sweep_x + 14, y_pos + bar_height - 4],
-                    radius=3,
-                    fill=(255, 255, 255, 95),
-                )
-
-            # Luminous glowing tip
-            draw.rounded_rectangle([bar_x_start + bar_w - 8, y_pos, bar_x_start + bar_w, y_pos + bar_height], radius=4, fill="#FFFFFF")
-
             # Circular player photo avatar mounted at the leading edge of the bar
             avatar_img = self._get_avatar(entity, size=bar_height + 4, border_color=bar_color)
             av_w, av_h = avatar_img.size
@@ -701,19 +688,6 @@ class StatRaceTemplate(BaseTemplate):
             bar_w = int((raw_val / axis_max) * channel_w) if axis_max > 0 else 0
             bar_w = max(10, bar_w)
             draw.rounded_rectangle([margin, bar_y, margin + bar_w, bar_y + bar_h], radius=6, fill=bar_color)
-
-            # Traveling luminous energy sweep across active bar (shifts every frame)
-            sweep_offset = int((t * 260 + rank_y * 45) % max(14, bar_w))
-            sweep_x = margin + sweep_offset
-            if sweep_x < margin + bar_w - 8:
-                draw.rounded_rectangle(
-                    [sweep_x, bar_y + 4, sweep_x + 14, bar_y + bar_h - 4],
-                    radius=3,
-                    fill=(255, 255, 255, 95),
-                )
-
-            # Glowing tip
-            draw.rounded_rectangle([margin + bar_w - 8, bar_y, margin + bar_w, bar_y + bar_h], radius=4, fill="#FFFFFF")
 
             # Circular photo avatar mounted at bar tip
             avatar_bar = self._get_avatar(entity, size=bar_h + 4, border_color=bar_color)
