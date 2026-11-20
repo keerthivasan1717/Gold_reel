@@ -340,7 +340,7 @@ class YouTubeUploader:
         }
 
         try:
-            with httpx.Client(timeout=30.0) as client:
+            with httpx.Client(timeout=httpx.Timeout(300.0, connect=30.0)) as client:
                 init_res = client.post(
                     f"{self.UPLOAD_URL}?uploadType=resumable&part=snippet,status",
                     headers=headers,
