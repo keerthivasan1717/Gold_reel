@@ -455,44 +455,50 @@ class StatRaceTemplate(BaseTemplate):
         smooth_axis_max = max(10.0, smooth_axis_max)
         ticks = ticks_to if axis_max_to >= axis_max_from else ticks_from
 
-        # 1. Header (y: 40 - 120)
-        font_title = self.layout.get_font("display", 54)
-        font_sub = self.layout.get_font("bold", 26)
+        # 1. Sleek Minimal Top Tag & Full-Screen Layout Boundaries
+        font_top_tag = self.layout.get_font("bold", 22)
+        title_tag = f"{self.fact_table.title.upper()}  •  {self.fact_table.metric_label.upper()}"
+        draw.text((self.layout.margin, 20), title_tag, fill=Colors.rgb_muted, font=font_top_tag)
 
-        draw.text((self.layout.margin, 38), self.fact_table.title.upper(), fill=Colors.rgb_ivory, font=font_title)
-        sub_text = f"{self.fact_table.subtitle or 'Historical Progression'}  •  {self.fact_table.metric_label}"
-        draw.text((self.layout.margin, 96), sub_text, fill=Colors.rgb_gold, font=font_sub)
-
-        # Layout boundaries
+        # Layout boundaries (zoomed across the screen)
         name_col_width = int(self.layout.width * 0.22)
         bar_x_start = self.layout.margin + name_col_width + 15
-        max_bar_width = int(self.layout.width * 0.60)
+        max_bar_width = int(self.layout.width * 0.58)
         bar_x_end = bar_x_start + max_bar_width
 
-        chart_top_y = int(self.layout.height * 0.16)
-        chart_bottom_y = int(self.layout.height * 0.88)
+        chart_top_y = 54
+        chart_bottom_y = self.layout.height - 95
 
         # 2. Dynamic Axis & Gridlines
         font_tick = self.layout.get_font("regular", 22)
         unit_tag = f"▲ Axis ({self.unit})"
-        draw.text((bar_x_end, chart_top_y - 32), unit_tag, font=font_tick, fill=Colors.rgb_gold, anchor="rb")
+        draw.text((bar_x_end, chart_top_y - 12), unit_tag, font=font_tick, fill=Colors.rgb_gold, anchor="rb")
 
         for tick in ticks:
             tick_x = bar_x_start + int((tick / smooth_axis_max) * max_bar_width)
             if tick_x <= bar_x_end + 1:
-                draw.line([(tick_x, chart_top_y - 6), (tick_x, chart_bottom_y)], fill="#1E232B", width=1)
-                draw.text((tick_x, chart_top_y - 12), f"{tick:,}", font=font_tick, fill=Colors.rgb_muted, anchor="mb")
+                draw.line([(tick_x, chart_top_y), (tick_x, chart_bottom_y)], fill="#1E232B", width=1)
+                draw.text((tick_x, chart_top_y - 10), f"{tick:,}", font=font_tick, fill=Colors.rgb_muted, anchor="mb")
 
-        draw.line([(bar_x_start, chart_top_y - 6), (bar_x_end, chart_top_y - 6)], fill=Colors.rgb_line, width=1)
+        draw.line([(bar_x_start, chart_top_y), (bar_x_end, chart_top_y)], fill=Colors.rgb_line, width=1)
 
-        # 3. Dynamic Bars & Names
-        bar_start_y = chart_top_y + 10
-        bar_height = 54
-        bar_gap = 16
+        # 3. Dynamic Bars & Names (Zoomed vertically and horizontally to eliminate dead space)
+        bar_start_y = chart_top_y + 12
+        num_visible = len(visible_entities)
 
-        font_name = self.layout.get_font("bold", 32)
-        font_group_tag = self.layout.get_font("bold", 20)
-        font_val = self.layout.get_font("display", 36)
+        # Adaptive zoom so graph covers the screen regardless of count, removing marked empty space
+        if num_visible < 10 and num_visible > 0:
+            slot_h = (chart_bottom_y - bar_start_y) / float(num_visible)
+            bar_height = max(54, int(slot_h * 0.76))
+            bar_gap = max(12, int(slot_h * 0.24))
+        else:
+            slot_h = (chart_bottom_y - bar_start_y) / 10.0
+            bar_height = int(slot_h * 0.78)   # ~74px (was 54px, 37% zoom increase)
+            bar_gap = int(slot_h * 0.22)      # ~18px
+
+        font_name = self.layout.get_font("bold", 34)
+        font_group_tag = self.layout.get_font("bold", 22)
+        font_val = self.layout.get_font("display", 42)
 
         for entity in visible_entities:
             rank_y = entity_rank_y[entity]
@@ -549,12 +555,12 @@ class StatRaceTemplate(BaseTemplate):
             frame.paste(avatar_img, (av_x, av_y), avatar_img)
 
             # Value label directly right of avatar
-            val_x = av_x + av_w + 10
+            val_x = av_x + av_w + 12
             draw.text((val_x, name_y), val_text, font=font_val, fill=bar_color, anchor="lm")
 
         # 4. Large Dynamic Year & Continuous Rolling Phase Ticker in Bottom Right
         font_year = self.layout.get_font("display", 96)
-        font_phase = self.layout.get_font("bold", 30)
+        font_phase = self.layout.get_font("bold", 28)
 
         step_parts = step_from.split()
         year_str = step_parts[0]
@@ -567,20 +573,21 @@ class StatRaceTemplate(BaseTemplate):
             month_idx = int(alpha * 12) % 12
             sub_progress = f"● {months[month_idx]}"
 
-        draw.text((self.layout.width - 80, self.layout.height - 110), year_str, font=font_year, fill=Colors.rgb_gold, anchor="rs")
-        draw.text((self.layout.width - 80, self.layout.height - 75), sub_progress, font=font_phase, fill=Colors.rgb_ivory, anchor="rs")
+        year_x = self.layout.width - 60
+        draw.text((year_x, self.layout.height - 85), year_str, font=font_year, fill=Colors.rgb_gold, anchor="rs")
+        draw.text((year_x, self.layout.height - 52), sub_progress, font=font_phase, fill=Colors.rgb_ivory, anchor="rs")
 
         # 5. Footer: Vibrant Legend & Source Credit
-        footer_y = self.layout.height - 70
+        footer_y = self.layout.height - 62
         self._draw_legend(draw, footer_y)
 
-        font_source = self.layout.get_font("regular", 22)
+        font_source = self.layout.get_font("regular", 20)
         source_label = f"Source: {src_text} | GoldReel Visuals"
-        draw.text((self.layout.width - self.layout.margin, footer_y + 8), source_label, font=font_source, fill=Colors.rgb_muted, anchor="rm")
+        draw.text((self.layout.width - 320, footer_y + 10), source_label, font=font_source, fill=Colors.rgb_muted, anchor="rm")
 
         # Watermark
-        font_watermark = self.layout.get_font("bold", 22)
-        draw.text((self.layout.margin, self.layout.height - 35), "GOLDREEL", fill=Colors.rgb_muted, font=font_watermark)
+        font_watermark = self.layout.get_font("bold", 20)
+        draw.text((self.layout.margin, self.layout.height - 30), "GOLDREEL", fill=Colors.rgb_muted, font=font_watermark)
 
     def _draw_legend(self, draw: ImageDraw.ImageDraw, y_pos: int) -> None:
         """Draw vibrant legend chips at bottom left."""
