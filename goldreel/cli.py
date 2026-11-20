@@ -38,7 +38,7 @@ from goldreel.script.router import ProviderRouter
 from goldreel.script.validator import ScriptValidator
 from goldreel.security.checks import scan_for_secrets
 from goldreel.state.store import StateStore, compute_content_hash
-from goldreel.topics.finder import AngleFinder
+from goldreel.topics.finder import AngleFinder, select_next_unproduced_series
 from goldreel.topics.history import TopicHistory
 from goldreel.voice.piper import PiperWrapper
 
@@ -184,6 +184,19 @@ def make(
 ) -> None:
     """Run full pipeline: ingest -> facts -> topics -> script -> voice -> render -> qc."""
     pipe_cfg = load_pipeline_config()
+
+    should_publish = publish or (not dry_run and pipe_cfg.publishing.publish_enabled)
+    if should_publish:
+        uploader = YouTubeUploader()
+        target_pub_time = uploader.scheduler.compute_publish_time(format_type=format_type)
+        if uploader.scheduler.has_video_scheduled_for_date(target_pub_time):
+            typer.secho(
+                f"[Make] Video for {target_pub_time} (6:30 PM IST) is already scheduled in YouTube. Skipping duplicate daily generation.",
+                fg=typer.colors.GREEN,
+                bold=True,
+            )
+            return
+
     store = StateStore()
     if job_id and (store.base_dir / job_id).exists():
         job = store.get_job(job_id)
@@ -211,7 +224,15 @@ def make(
         sample_path = Path("tests/fixtures/SAMPLE_wikidata_comic.json")
     else:
         adapter = CricsheetAdapter()
-        if format_type == "landscape" and Path("tests/fixtures/SAMPLE_cricket_series.json").exists():
+        next_series = select_next_unproduced_series(series_dir="data/series", lane=lane)
+        if format_type == "landscape" and next_series and next_series.exists():
+            sample_path = next_series
+            typer.secho(f"  [Facts] Auto-selected rotating stats series: {sample_path.name}", fg=typer.colors.CYAN)
+        elif format_type == "landscape" and Path("data/SAMPLE_ipl_runs_series.json").exists():
+            sample_path = Path("data/SAMPLE_ipl_runs_series.json")
+        elif format_type == "landscape" and Path("tests/fixtures/SAMPLE_ipl_runs_series.json").exists():
+            sample_path = Path("tests/fixtures/SAMPLE_ipl_runs_series.json")
+        elif format_type == "landscape" and Path("tests/fixtures/SAMPLE_cricket_series.json").exists():
             sample_path = Path("tests/fixtures/SAMPLE_cricket_series.json")
         else:
             sample_path = Path("tests/fixtures/SAMPLE_cricket_facts.json")

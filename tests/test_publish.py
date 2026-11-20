@@ -57,13 +57,13 @@ def test_publish_scheduler_computes_scheduled_timestamps():
     """Verify compute_publish_time returns valid RFC 3339 future UTC timestamps."""
     scheduler = PublishScheduler()
 
-    # Long-form scheduled time (Tuesday/Friday 14:00 UTC)
+    # Scheduled time target (Daily 13:00 UTC = 18:30 IST)
     t_long = scheduler.compute_publish_time(format_type="landscape", buffer_hours=4)
-    assert re.match(r"^\d{4}-\d{2}-\d{2}T14:00:00Z$", t_long)
+    assert re.match(r"^\d{4}-\d{2}-\d{2}T13:00:00Z$", t_long)
 
-    # Short scheduled time (Daily 17:00 UTC)
+    # Short scheduled time target (Daily 13:00 UTC = 18:30 IST)
     t_short = scheduler.compute_publish_time(format_type="portrait", buffer_hours=4)
-    assert re.match(r"^\d{4}-\d{2}-\d{2}T17:00:00Z$", t_short)
+    assert re.match(r"^\d{4}-\d{2}-\d{2}T13:00:00Z$", t_short)
 
 
 def test_thumbnail_generator_landscape_and_portrait(tmp_path: Path):
@@ -214,7 +214,8 @@ def test_uploader_kill_switch_triggers_fallback_package(tmp_path: Path):
     cfg.publishing.publish_enabled = False  # Master kill switch active
 
     packager = FallbackPackager(out_dir=tmp_path / "out")
-    uploader = YouTubeUploader(config=cfg, packager=packager)
+    test_hist = PublishHistory(history_path=tmp_path / "test_hist.json")
+    uploader = YouTubeUploader(config=cfg, packager=packager, history=test_hist)
 
     res = uploader.publish(job, dry_run=False)
     assert res.success is True
@@ -241,7 +242,8 @@ def test_uploader_restricted_api_detection(tmp_path: Path, monkeypatch):
     cfg.publishing.publish_enabled = True  # Network upload enabled
 
     packager = FallbackPackager(out_dir=tmp_path / "out")
-    uploader = YouTubeUploader(config=cfg, packager=packager)
+    test_hist = PublishHistory(history_path=tmp_path / "test_hist.json")
+    uploader = YouTubeUploader(config=cfg, packager=packager, history=test_hist)
 
     # Mock auth returning an active access token
     monkeypatch.setattr(uploader.auth, "get_access_token", lambda: "mock_token")

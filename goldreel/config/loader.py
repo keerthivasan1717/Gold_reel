@@ -11,14 +11,14 @@ from pydantic import BaseModel, Field
 class PublishingConfig(BaseModel):
     publish_enabled: bool = False
     mode: str = "scheduled"
-    max_uploads_per_day: int = 2
+    max_uploads_per_day: int = 1
     max_uploads_per_week: int = 7
     synthetic_content_disclosure: bool = True
     made_for_kids: bool = False
 
 
 class ProductionCadenceConfig(BaseModel):
-    target_long_videos_per_week: int = 2
+    target_long_videos_per_week: int = 7
     target_shorts_per_week: int = 5
     long_video_min_duration_sec: int = 120
     long_video_max_duration_sec: int = 180

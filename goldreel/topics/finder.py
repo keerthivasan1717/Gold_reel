@@ -1,6 +1,8 @@
 """Rule-based angle finder and candidate scorer."""
 
+import json
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Literal
 
 from goldreel.config.loader import TopicAngle, TopicsConfig, load_topics_config
@@ -113,3 +115,56 @@ class AngleFinder:
             base += 2.0
 
         return round(base, 2)
+
+
+def select_next_unproduced_series(
+    series_dir: Path | str = "data/series",
+    lane: str = "sports",
+    history: TopicHistory | None = None,
+) -> Path | None:
+    """Select the next series dataset that has not been produced yet (< 85% similarity).
+
+    If all series have been produced, selects the series with the lowest historical similarity
+    (oldest / least recent) to cycle through the library without duplication.
+    """
+    s_path = Path(series_dir)
+    if not s_path.exists():
+        return None
+
+    hist = history or TopicHistory()
+    candidates = sorted(s_path.glob("*.json"))
+    if not candidates:
+        return None
+
+    unproduced: list[tuple[float, Path]] = []
+    produced: list[tuple[float, Path]] = []
+
+    for cand in candidates:
+        try:
+            with open(cand, encoding="utf-8") as f:
+                data = json.load(f)
+            cand_lane = data.get("lane", "sports")
+            if lane and cand_lane != lane:
+                continue
+
+            title = data.get("title", cand.stem)
+            entities = [r.get("entity", "") for r in data.get("records", [])]
+            is_dup, _, sim = hist.check_similarity(title=title, entities=entities)
+            if not is_dup:
+                unproduced.append((sim, cand))
+            else:
+                produced.append((sim, cand))
+        except Exception:
+            continue
+
+    if unproduced:
+        # Prioritize unproduced series (lowest similarity first)
+        unproduced.sort(key=lambda x: x[0])
+        return unproduced[0][1]
+
+    if produced:
+        # If all produced, pick lowest similarity (oldest/least recent) to rotate
+        produced.sort(key=lambda x: x[0])
+        return produced[0][1]
+
+    return candidates[0]

@@ -151,9 +151,23 @@ class StatRaceTemplate(BaseTemplate):
         # Build group colors and ensure NO dull gray bars anywhere
         self._build_color_palette()
 
+        # Dynamic intro / outro duration scaling for fast-paced videos
+        if dur <= 35.0:
+            self.intro_s = 2.0
+            self.outro_s = 2.5
+        elif dur <= 60.0:
+            self.intro_s = 3.0
+            self.outro_s = 3.5
+        else:
+            self.intro_s = 4.0
+            self.outro_s = 5.0
+
         num_transitions = max(1, len(self.time_steps) - 1)
-        body_dur = max(1.0, dur - self.intro_s - self.outro_s)
-        self.step_duration_s = body_dur / num_transitions
+        if self.is_portrait:
+            self.step_duration_s = max(1.0, dur) / num_transitions
+        else:
+            body_dur = max(1.0, dur - self.intro_s - self.outro_s)
+            self.step_duration_s = body_dur / num_transitions
 
         return self.timeline
 
@@ -268,9 +282,16 @@ class StatRaceTemplate(BaseTemplate):
 
         draw = ImageDraw.Draw(frame)
 
+        # Dynamic floating gold particles/sparks that drift every frame across the background
+        for p_idx in range(24):
+            px = int((p_idx * 83 + t * 45 * (1 + (p_idx % 3) * 0.4)) % self.layout.width)
+            py = int((p_idx * 137 + t * 22 * (1 + (p_idx % 2) * 0.3)) % self.layout.height)
+            size = 2 if (p_idx % 2 == 0) else 3
+            draw.ellipse([px, py, px + size, py + size], fill=(212, 175, 55, 95))
+
         # Global top progress line
         prog_w = int((t / max(dur, 0.1)) * self.layout.width)
-        draw.rectangle([0, 0, prog_w, 6], fill=Colors.rgb_gold)
+        draw.rectangle([0, 0, prog_w, 4], fill=Colors.rgb_gold)
 
         src_text = self.fact_table.sources[0].name.title() if self.fact_table.sources else "Cricsheet"
 
@@ -507,6 +528,16 @@ class StatRaceTemplate(BaseTemplate):
             bar_w = max(6, target_bar_w)
             draw.rounded_rectangle([bar_x_start, y_pos, bar_x_start + bar_w, y_pos + bar_height], radius=6, fill=bar_color)
 
+            # Traveling luminous energy sweep across active bar (shifts every frame with t)
+            sweep_offset = int((t * 260 + rank_y * 45) % max(14, bar_w))
+            sweep_x = bar_x_start + sweep_offset
+            if sweep_x < bar_x_start + bar_w - 8:
+                draw.rounded_rectangle(
+                    [sweep_x, y_pos + 4, sweep_x + 14, y_pos + bar_height - 4],
+                    radius=3,
+                    fill=(255, 255, 255, 95),
+                )
+
             # Luminous glowing tip
             draw.rounded_rectangle([bar_x_start + bar_w - 8, y_pos, bar_x_start + bar_w, y_pos + bar_height], radius=4, fill="#FFFFFF")
 
@@ -521,10 +552,23 @@ class StatRaceTemplate(BaseTemplate):
             val_x = av_x + av_w + 10
             draw.text((val_x, name_y), val_text, font=font_val, fill=bar_color, anchor="lm")
 
-        # 4. Large Dynamic Year Counter in Bottom Right
-        font_year = self.layout.get_font("display", 112)
-        display_step = step_from.replace(" Mid", "").replace(" End", "")
-        draw.text((self.layout.width - 80, self.layout.height - 105), display_step, font=font_year, fill=Colors.rgb_gold, anchor="rs")
+        # 4. Large Dynamic Year & Continuous Rolling Phase Ticker in Bottom Right
+        font_year = self.layout.get_font("display", 96)
+        font_phase = self.layout.get_font("bold", 30)
+
+        step_parts = step_from.split()
+        year_str = step_parts[0]
+        phase_str = step_parts[1].upper() if len(step_parts) > 1 else ""
+
+        if phase_str:
+            sub_progress = f"● {phase_str}"
+        else:
+            months = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"]
+            month_idx = int(alpha * 12) % 12
+            sub_progress = f"● {months[month_idx]}"
+
+        draw.text((self.layout.width - 80, self.layout.height - 110), year_str, font=font_year, fill=Colors.rgb_gold, anchor="rs")
+        draw.text((self.layout.width - 80, self.layout.height - 75), sub_progress, font=font_phase, fill=Colors.rgb_ivory, anchor="rs")
 
         # 5. Footer: Vibrant Legend & Source Credit
         footer_y = self.layout.height - 70
@@ -651,6 +695,16 @@ class StatRaceTemplate(BaseTemplate):
             bar_w = max(10, bar_w)
             draw.rounded_rectangle([margin, bar_y, margin + bar_w, bar_y + bar_h], radius=6, fill=bar_color)
 
+            # Traveling luminous energy sweep across active bar (shifts every frame)
+            sweep_offset = int((t * 260 + rank_y * 45) % max(14, bar_w))
+            sweep_x = margin + sweep_offset
+            if sweep_x < margin + bar_w - 8:
+                draw.rounded_rectangle(
+                    [sweep_x, bar_y + 4, sweep_x + 14, bar_y + bar_h - 4],
+                    radius=3,
+                    fill=(255, 255, 255, 95),
+                )
+
             # Glowing tip
             draw.rounded_rectangle([margin + bar_w - 8, bar_y, margin + bar_w, bar_y + bar_h], radius=4, fill="#FFFFFF")
 
@@ -664,10 +718,23 @@ class StatRaceTemplate(BaseTemplate):
             # Value text right of avatar
             draw.text((av_bx + av_bw + 10, bar_y + 6), val_text, fill=bar_color, font=font_val)
 
-        # 3. Dynamic Year Display (y: 1320)
-        font_year = self.layout.get_font("display", 96)
-        display_step = step_from.replace(" Mid", "").replace(" End", "")
-        draw.text((margin + stage_w, 1340), display_step, fill=Colors.rgb_gold, font=font_year, anchor="rs")
+        # 3. Dynamic Year & Continuous Phase Display (y: 1320)
+        font_year = self.layout.get_font("display", 88)
+        font_phase = self.layout.get_font("bold", 28)
+
+        step_parts = step_from.split()
+        year_str = step_parts[0]
+        phase_str = step_parts[1].upper() if len(step_parts) > 1 else ""
+
+        if phase_str:
+            sub_progress = f"● {phase_str}"
+        else:
+            months = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"]
+            month_idx = int(alpha * 12) % 12
+            sub_progress = f"● {months[month_idx]}"
+
+        draw.text((margin + stage_w, 1340), year_str, fill=Colors.rgb_gold, font=font_year, anchor="rs")
+        draw.text((margin + stage_w, 1375), sub_progress, fill=Colors.rgb_ivory, font=font_phase, anchor="rs")
 
         # 4. Analytical Takeaway Box (y: 1420 - 1730)
         ins_y = 1420

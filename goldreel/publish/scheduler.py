@@ -106,34 +106,31 @@ class PublishScheduler:
 
         return True, "Quota checks satisfied"
 
+    def has_video_scheduled_for_date(self, target_publish_time: str) -> bool:
+        """Check if any video in history is scheduled for or published on target date (YYYY-MM-DD)."""
+        target_date = target_publish_time.split("T")[0]
+        for r in self.history.records:
+            if r.scheduled_at and r.scheduled_at.startswith(target_date):
+                return True
+        return False
+
     def compute_publish_time(
         self,
         format_type: str = "landscape",
-        buffer_hours: int = 6,
+        buffer_hours: float = 0.5,
     ) -> str:
         """Compute the next optimal scheduled release timestamp in UTC.
 
-        YouTube require publishAt to be in RFC 3339 format (e.g. '2026-11-19T14:00:00Z').
-        Cadence rules:
-        - Long-form videos: Target 14:00 UTC (Tuesday or Friday)
-        - Shorts: Target 17:00 UTC (daily)
+        Target release time: 13:00 UTC (18:30 IST / 6:30 PM IST) daily.
+        YouTube requires publishAt to be in RFC 3339 format (e.g. 'YYYY-MM-DDTHH:MM:SSZ').
         """
         now = datetime.now(UTC)
         min_release = now + timedelta(hours=buffer_hours)
 
-        if format_type == "portrait":
-            # Shorts: release daily at 17:00 UTC
-            candidate = min_release.replace(hour=17, minute=0, second=0, microsecond=0)
-            if candidate < min_release:
-                candidate += timedelta(days=1)
-        else:
-            # Long-form: release Tuesday (weekday 1) or Friday (weekday 4) at 14:00 UTC
-            candidate = min_release.replace(hour=14, minute=0, second=0, microsecond=0)
-            if candidate < min_release:
-                candidate += timedelta(days=1)
-            # Advance to Tuesday or Friday
-            while candidate.weekday() not in (1, 4):
-                candidate += timedelta(days=1)
+        # Target 13:00 UTC (18:30 IST / 6:30 PM IST) daily
+        candidate = min_release.replace(hour=13, minute=0, second=0, microsecond=0)
+        if candidate < min_release:
+            candidate += timedelta(days=1)
 
         # Output format required by YouTube Data API v3 (RFC 3339 / ISO 8601 UTC)
         return candidate.strftime("%Y-%m-%dT%H:%M:%SZ")
