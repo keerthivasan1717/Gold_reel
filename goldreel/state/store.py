@@ -4,12 +4,12 @@ Manages idempotent, resumable job directories under state/<job_id>/ with plain f
 hashes, and stage completion tracking.
 """
 
-from datetime import datetime, timezone
 import hashlib
 import json
+import uuid
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any, Literal
-import uuid
 
 from pydantic import BaseModel, Field
 
@@ -58,7 +58,7 @@ class JobState:
         return self.manifest.job_id
 
     def _now_iso(self) -> str:
-        return datetime.now(timezone.utc).isoformat()
+        return datetime.now(UTC).isoformat()
 
     def save_manifest(self) -> None:
         self.manifest.updated_at = self._now_iso()
@@ -161,13 +161,13 @@ class StateStore:
         self.base_dir.mkdir(parents=True, exist_ok=True)
 
     def create_job(self, job_id: str | None = None) -> JobState:
-        jid = job_id or datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S_") + uuid.uuid4().hex[:6]
+        jid = job_id or datetime.now(UTC).strftime("%Y%m%d_%H%M%S_") + uuid.uuid4().hex[:6]
         job_dir = self.base_dir / jid
         if job_dir.exists():
             raise FileExistsError(f"Job already exists: {jid}")
         job_dir.mkdir(parents=True, exist_ok=False)
 
-        now = datetime.now(timezone.utc).isoformat()
+        now = datetime.now(UTC).isoformat()
         manifest = JobManifest(
             job_id=jid,
             created_at=now,
