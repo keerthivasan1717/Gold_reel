@@ -5,7 +5,6 @@ and entity group affiliations (e.g. ODI centuries progression 1985-2024).
 """
 
 from datetime import UTC, datetime
-from typing import Any
 
 from goldreel.facts.models import FactRecord, FactTable, SourceAttribution
 
@@ -52,7 +51,7 @@ def create_sports_time_series() -> FactTable:
 
     for idx, step_name in enumerate(steps):
         step_dict: dict[str, float] = {}
-        for name, grp, start_idx, base_val, target_val, peak_idx in players_meta:
+        for name, _grp, start_idx, base_val, target_val, peak_idx in players_meta:
             if idx < start_idx:
                 step_dict[name] = 0.0
             else:

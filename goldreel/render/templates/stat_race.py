@@ -242,6 +242,39 @@ class StatRaceTemplate(BaseTemplate):
         slug = entity.lower().replace(" ", "_").replace("-", "_")
         img_path = Path("assets/images/players") / f"{slug}.png"
 
+        if not img_path.exists():
+            # Attempt to automatically fetch portrait from Wikipedia
+            try:
+                import io
+                import json
+                import urllib.parse
+                import urllib.request
+                wiki_url = f"https://en.wikipedia.org/w/api.php?action=query&titles={urllib.parse.quote(entity)}&prop=pageimages&format=json&pithumbsize=500"
+                req = urllib.request.Request(wiki_url, headers={"User-Agent": "GoldReelProduction/1.0 (keerthivasan1717@gmail.com)"})
+                with urllib.request.urlopen(req, timeout=5.0) as resp:
+                    wdata = json.loads(resp.read().decode())
+                pages = wdata.get("query", {}).get("pages", {})
+                for p in pages.values():
+                    thumb = p.get("thumbnail", {}).get("source")
+                    if thumb:
+                        treq = urllib.request.Request(thumb, headers={"User-Agent": "GoldReelProduction/1.0 (keerthivasan1717@gmail.com)"})
+                        with urllib.request.urlopen(treq, timeout=10.0) as tresp:
+                            raw_bytes = tresp.read()
+                        with Image.open(io.BytesIO(raw_bytes)) as dl_img:
+                            dl_rgba = dl_img.convert("RGBA")
+                            w, h = dl_rgba.size
+                            if w > h:
+                                x0 = (w - h) // 2
+                                dl_crop = dl_rgba.crop((x0, 0, x0 + h, h))
+                            else:
+                                y0 = int((h - w) * 0.1)
+                                dl_crop = dl_rgba.crop((0, y0, w, min(h, y0 + w)))
+                            img_path.parent.mkdir(parents=True, exist_ok=True)
+                            dl_crop.resize((128, 128), Image.Resampling.LANCZOS).save(img_path, "PNG")
+                        break
+            except Exception:
+                pass
+
         total_size = size + 6
         avatar = Image.new("RGBA", (total_size, total_size), (0, 0, 0, 0))
         adraw = ImageDraw.Draw(avatar)
@@ -321,8 +354,6 @@ class StatRaceTemplate(BaseTemplate):
     def _draw_landscape_intro(self, frame: Image.Image, draw: ImageDraw.ImageDraw, t: float) -> None:
         """Render Intro scene (0 to 4s) with animated accent reveal."""
         p = clamp01(t / self.intro_s)
-        alpha = ease_out_quad(p / 0.25) if p < 0.25 else (ease_out_quad((1.0 - p) / 0.25) if p > 0.75 else 1.0)
-
         center_x = self.layout.width // 2
         center_y = int(self.layout.height * 0.44)
 

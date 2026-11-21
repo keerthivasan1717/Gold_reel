@@ -8,22 +8,22 @@ publishing:
   publish_enabled: false
   # Mode: 'scheduled' (upload private with publishAt) or 'dry_run' or 'restricted_fallback'
   mode: "scheduled"
-  # Hard safety rate limits (YouTube quota is 10,000 units/day; 1 upload = 1,600 units)
-  max_uploads_per_day: 1
-  max_uploads_per_week: 7
+  # Hard safety rate limits (YouTube quota is 10,000 units/day; 1 upload = 1,600 units; 2 uploads = 3,200 units)
+  max_uploads_per_day: 2
+  max_uploads_per_week: 14
   # Altered or synthetic content disclosure required by YouTube
   synthetic_content_disclosure: true
   made_for_kids: false
 
 production_cadence:
-  # Default weekly outputs: 1 daily video (7 per week)
+  # Daily regular plan: 1 daily long video (165s) + 1 daily short video (30-60s)
   target_long_videos_per_week: 7
-  target_shorts_per_week: 5
+  target_shorts_per_week: 7
   # Duration targets (seconds)
   long_video_min_duration_sec: 120
   long_video_max_duration_sec: 180
   short_video_min_duration_sec: 30
-  short_video_max_duration_sec: 45
+  short_video_max_duration_sec: 60
 
 lanes:
   # Open Sports Lane (Cricsheet, football-data.org)

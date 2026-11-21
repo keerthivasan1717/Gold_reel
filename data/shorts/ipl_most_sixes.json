@@ -1,0 +1,67 @@
+{
+  "topic_id": "ipl_most_sixes_countdown",
+  "title": "IPL ALL-TIME MOST SIXES",
+  "subtitle": "Top 5 Most Destructive Six-Hitters in IPL History",
+  "lane": "sports",
+  "metric_label": "Total Career IPL Sixes",
+  "sources": [
+    {
+      "name": "cricsheet",
+      "source_url": "https://cricsheet.org/matches/",
+      "retrieved_at": "2026-11-21T14:00:00Z",
+      "attribution_text": "Data provided by Cricsheet (cricsheet.org), licensed under CC-BY 4.0."
+    }
+  ],
+  "records": [
+    {
+      "rank": 1,
+      "entity": "Chris Gayle",
+      "metric": "Career Sixes",
+      "value": 357,
+      "unit": "sixes",
+      "context": {
+        "team": "RCB / PBKS"
+      }
+    },
+    {
+      "rank": 2,
+      "entity": "Rohit Sharma",
+      "metric": "Career Sixes",
+      "value": 280,
+      "unit": "sixes",
+      "context": {
+        "team": "Mumbai Indians"
+      }
+    },
+    {
+      "rank": 3,
+      "entity": "Virat Kohli",
+      "metric": "Career Sixes",
+      "value": 272,
+      "unit": "sixes",
+      "context": {
+        "team": "RCB"
+      }
+    },
+    {
+      "rank": 4,
+      "entity": "MS Dhoni",
+      "metric": "Career Sixes",
+      "value": 252,
+      "unit": "sixes",
+      "context": {
+        "team": "CSK"
+      }
+    },
+    {
+      "rank": 5,
+      "entity": "AB de Villiers",
+      "metric": "Career Sixes",
+      "value": 251,
+      "unit": "sixes",
+      "context": {
+        "team": "RCB / DD"
+      }
+    }
+  ]
+}

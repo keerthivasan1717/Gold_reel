@@ -22,6 +22,7 @@ class PublishRecord(BaseModel):
     scheduled_at: str | None = None
     published_at: str = Field(default_factory=lambda: datetime.now(UTC).isoformat())
     mode: str = "scheduled"
+    format_type: str = "landscape"
 
 
 class PublishHistory:
@@ -56,6 +57,7 @@ class PublishHistory:
         video_id: str | None,
         scheduled_at: str | None,
         mode: str,
+        format_type: str = "landscape",
     ) -> None:
         """Register a published/scheduled video upload."""
         rec = PublishRecord(
@@ -63,6 +65,7 @@ class PublishHistory:
             video_id=video_id,
             scheduled_at=scheduled_at,
             mode=mode,
+            format_type=format_type,
         )
         self.records.append(rec)
         self._save()
@@ -106,12 +109,15 @@ class PublishScheduler:
 
         return True, "Quota checks satisfied"
 
-    def has_video_scheduled_for_date(self, target_publish_time: str) -> bool:
-        """Check if any video in history is scheduled for or published on target date (YYYY-MM-DD)."""
+    def has_video_scheduled_for_date(
+        self, target_publish_time: str, format_type: str | None = None
+    ) -> bool:
+        """Check if any video in history is scheduled for target date (YYYY-MM-DD), optionally filtered by format."""
         target_date = target_publish_time.split("T")[0]
         for r in self.history.records:
             if r.scheduled_at and r.scheduled_at.startswith(target_date):
-                return True
+                if format_type is None or getattr(r, "format_type", "landscape") == format_type:
+                    return True
         return False
 
     def compute_publish_time(

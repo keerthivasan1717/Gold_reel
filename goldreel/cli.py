@@ -123,8 +123,15 @@ def plan(
         facts_path = Path("tests/fixtures/SAMPLE_wikidata_comic.json")
         adapter = WikidataComicAdapter()
     else:
-        facts_path = Path("tests/fixtures/SAMPLE_cricket_facts.json")
         adapter = CricsheetAdapter()
+        series_dir = Path("data/shorts") if (format_type == "portrait" and Path("data/shorts").exists() and any(Path("data/shorts").glob("*.json"))) else Path("data/series")
+        next_series = select_next_unproduced_series(series_dir=series_dir, lane=lane)
+        if next_series and next_series.exists():
+            facts_path = next_series
+        elif Path("data/SAMPLE_ipl_runs_series.json").exists():
+            facts_path = Path("data/SAMPLE_ipl_runs_series.json")
+        else:
+            facts_path = Path("tests/fixtures/SAMPLE_cricket_facts.json")
 
     fact_table = adapter.extract_facts(facts_path)
     finder = AngleFinder()
@@ -189,9 +196,9 @@ def make(
     if should_publish:
         uploader = YouTubeUploader()
         target_pub_time = uploader.scheduler.compute_publish_time(format_type=format_type)
-        if uploader.scheduler.has_video_scheduled_for_date(target_pub_time):
+        if uploader.scheduler.has_video_scheduled_for_date(target_pub_time, format_type=format_type):
             typer.secho(
-                f"[Make] Video for {target_pub_time} (6:30 PM IST) is already scheduled in YouTube. Skipping duplicate daily generation.",
+                f"[Make] Video ({format_type}) for {target_pub_time} (6:30 PM IST) is already scheduled in YouTube. Skipping duplicate daily generation.",
                 fg=typer.colors.GREEN,
                 bold=True,
             )
@@ -224,15 +231,16 @@ def make(
         sample_path = Path("tests/fixtures/SAMPLE_wikidata_comic.json")
     else:
         adapter = CricsheetAdapter()
-        next_series = select_next_unproduced_series(series_dir="data/series", lane=lane)
-        if format_type == "landscape" and next_series and next_series.exists():
+        series_dir = Path("data/shorts") if (format_type == "portrait" and Path("data/shorts").exists() and any(Path("data/shorts").glob("*.json"))) else Path("data/series")
+        next_series = select_next_unproduced_series(series_dir=series_dir, lane=lane)
+        if next_series and next_series.exists():
             sample_path = next_series
             typer.secho(f"  [Facts] Auto-selected rotating stats series: {sample_path.name}", fg=typer.colors.CYAN)
-        elif format_type == "landscape" and Path("data/SAMPLE_ipl_runs_series.json").exists():
+        elif Path("data/SAMPLE_ipl_runs_series.json").exists():
             sample_path = Path("data/SAMPLE_ipl_runs_series.json")
-        elif format_type == "landscape" and Path("tests/fixtures/SAMPLE_ipl_runs_series.json").exists():
+        elif Path("tests/fixtures/SAMPLE_ipl_runs_series.json").exists():
             sample_path = Path("tests/fixtures/SAMPLE_ipl_runs_series.json")
-        elif format_type == "landscape" and Path("tests/fixtures/SAMPLE_cricket_series.json").exists():
+        elif Path("tests/fixtures/SAMPLE_cricket_series.json").exists():
             sample_path = Path("tests/fixtures/SAMPLE_cricket_series.json")
         else:
             sample_path = Path("tests/fixtures/SAMPLE_cricket_facts.json")
@@ -372,6 +380,8 @@ def make(
             template = ScrollCompareTemplate()
         elif angle_type == "stat_race":
             template = StatRaceTemplate(layout=PortraitLayout())
+        elif angle_type == "milestone_anniversary" and len(fact_table.records) == 1:
+            template = MilestoneTemplate(layout=PortraitLayout())
         else:
             # Multi-item continuous ranked countdown (replaces one-fact milestone)
             template = RankedCountdownTemplate(layout=PortraitLayout())

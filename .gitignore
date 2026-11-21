@@ -41,8 +41,12 @@ client_secrets.json
 
 # GoldReel run-time data & state
 cache/
-state/
+state/*
+!state/*.json
+!state/*.gitkeep
 out/
+exports/
+*.zip
 docs-site/
 
 # Testing & Tools

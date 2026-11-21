@@ -7,7 +7,7 @@ Strictly follows docs/DESIGN.md:
 - No empty zones: fills full portrait 1080x1920 and landscape 1920x1080 frames.
 """
 
-import math
+from pathlib import Path
 from typing import Any
 
 from PIL import Image, ImageDraw
@@ -64,6 +64,75 @@ class RankedCountdownTemplate(BaseTemplate):
         self.max_val = max_v
         return self.timeline
 
+    def _get_avatar(self, entity: str, size: int, border_color: Any) -> Image.Image | None:
+        """Return a circular player photo avatar with border ring if available."""
+        if not hasattr(self, "_avatar_cache"):
+            self._avatar_cache: dict[tuple[str, int, str], Image.Image | None] = {}
+
+        key = (entity, size, str(border_color))
+        if key in self._avatar_cache:
+            return self._avatar_cache[key]
+
+        slug = entity.lower().replace(" ", "_").replace("-", "_")
+        img_path = Path("assets/images/players") / f"{slug}.png"
+        if not img_path.exists():
+            # Attempt auto-fetch portrait from Wikipedia if missing
+            try:
+                import io
+                import json
+                import urllib.parse
+                import urllib.request
+                wiki_url = f"https://en.wikipedia.org/w/api.php?action=query&titles={urllib.parse.quote(entity)}&prop=pageimages&format=json&pithumbsize=500"
+                req = urllib.request.Request(wiki_url, headers={"User-Agent": "GoldReelProduction/1.0 (keerthivasan1717@gmail.com)"})
+                with urllib.request.urlopen(req, timeout=5.0) as resp:
+                    wdata = json.loads(resp.read().decode())
+                pages = wdata.get("query", {}).get("pages", {})
+                for p in pages.values():
+                    thumb = p.get("thumbnail", {}).get("source")
+                    if thumb:
+                        treq = urllib.request.Request(thumb, headers={"User-Agent": "GoldReelProduction/1.0 (keerthivasan1717@gmail.com)"})
+                        with urllib.request.urlopen(treq, timeout=10.0) as tresp:
+                            raw_bytes = tresp.read()
+                        with Image.open(io.BytesIO(raw_bytes)) as dl_img:
+                            dl_rgba = dl_img.convert("RGBA")
+                            w, h = dl_rgba.size
+                            if w > h:
+                                x0 = (w - h) // 2
+                                dl_crop = dl_rgba.crop((x0, 0, x0 + h, h))
+                            else:
+                                y0 = int((h - w) * 0.1)
+                                dl_crop = dl_rgba.crop((0, y0, w, min(h, y0 + w)))
+                            img_path.parent.mkdir(parents=True, exist_ok=True)
+                            dl_crop.resize((128, 128), Image.Resampling.LANCZOS).save(img_path, "PNG")
+                        break
+            except Exception:
+                pass
+
+        if not img_path.exists():
+            self._avatar_cache[key] = None
+            return None
+
+        total_size = size + 6
+        avatar = Image.new("RGBA", (total_size, total_size), (0, 0, 0, 0))
+        adraw = ImageDraw.Draw(avatar)
+        r = size // 2
+        cx, cy = r + 3, r + 3
+
+        adraw.ellipse([cx - r - 2, cy - r - 2, cx + r + 2, cy + r + 2], fill=border_color)
+
+        try:
+            with Image.open(img_path) as raw_img:
+                raw_crop = raw_img.convert("RGBA").resize((size, size), Image.Resampling.LANCZOS)
+                mask = Image.new("L", (size, size), 0)
+                mdraw = ImageDraw.Draw(mask)
+                mdraw.ellipse([0, 0, size, size], fill=255)
+                avatar.paste(raw_crop, (cx - r, cy - r), mask)
+            self._avatar_cache[key] = avatar
+            return avatar
+        except Exception:
+            self._avatar_cache[key] = None
+            return None
+
     def draw(self, t: float) -> Image.Image:
         dur = self.timeline.duration_sec if self.timeline else 30.0
         frame = self.bg.render(t, total_duration=dur)
@@ -119,8 +188,6 @@ class RankedCountdownTemplate(BaseTemplate):
             is_past = i < active_idx
 
             if is_active:
-                # Pulsing active chip
-                pulse = 0.85 + 0.15 * math.sin(t * 4.0)
                 draw.rectangle([chip_x, 255, chip_x + chip_w, 315], fill=Colors.rgb_gold, outline=Colors.rgb_gold_light, width=2)
                 draw.text((chip_x + (chip_w // 2) - 22, 268), f"#{item_rank}", fill=Colors.rgb_bg, font=font_chip)
             elif is_past:
@@ -146,6 +213,11 @@ class RankedCountdownTemplate(BaseTemplate):
         font_rank_num = self.layout.get_font("display", 140)
         draw.text((margin + 40, card_y + 35), f"COUNTDOWN #{current_item['rank']}", fill=Colors.rgb_gold, font=font_rank_tag)
         draw.text((margin + stage_w - 180, card_y + 20), f"#{current_item['rank']}", fill=Colors.rgb_gold, font=font_rank_num)
+
+        # Hero Player Portrait
+        hero_av = self._get_avatar(str(current_item["entity"]), size=116, border_color=Colors.rgb_gold)
+        if hero_av:
+            frame.paste(hero_av, (margin + stage_w - 160, card_y + 145), hero_av)
 
         # Entity Name
         font_entity = self.layout.get_font("bold", 72)
@@ -177,7 +249,7 @@ class RankedCountdownTemplate(BaseTemplate):
         draw.rectangle([margin + 40, bar_y, margin + 40 + cur_bar_w, bar_y + 50], fill=Colors.rgb_gold, outline=Colors.rgb_gold_light)
 
         # Continuous Shimmer Sweep across the bar every second
-        shimmer_x = margin + 40 + int(((item_t * 220) % max(cur_bar_w, 10)))
+        shimmer_x = margin + 40 + int((item_t * 220) % max(cur_bar_w, 10))
         draw.rectangle([shimmer_x, bar_y, min(shimmer_x + 14, margin + 40 + cur_bar_w), bar_y + 50], fill=Colors.rgb_gold_light)
 
         # Secondary Stat Highlights (side-by-side tiles)
@@ -221,7 +293,12 @@ class RankedCountdownTemplate(BaseTemplate):
             t_color = Colors.rgb_ivory if is_cur else Colors.rgb_silver
 
             draw.text((margin + 35, r_y), f"#{row_item['rank']}", fill=r_color, font=font_lad_val)
-            draw.text((margin + 115, r_y), str(row_item["entity"])[:20], fill=t_color, font=font_lad_row)
+            row_av = self._get_avatar(str(row_item["entity"]), size=38, border_color=r_color)
+            if row_av:
+                frame.paste(row_av, (margin + 85, r_y - 2), row_av)
+                draw.text((margin + 135, r_y), str(row_item["entity"])[:18], fill=t_color, font=font_lad_row)
+            else:
+                draw.text((margin + 115, r_y), str(row_item["entity"])[:20], fill=t_color, font=font_lad_row)
 
             r_val_str = f"{int(row_item['value']):,} {row_item['unit']}"
             draw.text((margin + stage_w - 240, r_y), r_val_str, fill=r_color, font=font_lad_val)
@@ -325,7 +402,7 @@ class RankedCountdownTemplate(BaseTemplate):
         draw.rectangle([card_x + 50, bar_y, card_x + 50 + cur_bar_w, bar_y + 60], fill=Colors.rgb_gold, outline=Colors.rgb_gold_light)
 
         # Shimmer sweep
-        shimmer_x = card_x + 50 + int(((item_t * 260) % max(cur_bar_w, 10)))
+        shimmer_x = card_x + 50 + int((item_t * 260) % max(cur_bar_w, 10))
         draw.rectangle([shimmer_x, bar_y, min(shimmer_x + 18, card_x + 50 + cur_bar_w), bar_y + 60], fill=Colors.rgb_gold_light)
 
         # Analytical Insight in Lower Half of Card

@@ -50,7 +50,7 @@ class AudioMixer:
             "192k",
             str(out_file),
         ]
-        subprocess.run(cmd, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        subprocess.run(cmd, check=True, capture_output=True)
         return out_file
 
     def mix_and_duck(

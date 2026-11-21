@@ -23,6 +23,7 @@ class PublishMetadata(BaseModel):
     publish_at: str | None = Field(
         default=None, description="ISO 8601 UTC timestamp for scheduled release"
     )
+    format_type: str = Field(default="landscape", description="Video format: landscape or portrait")
     made_for_kids: bool = Field(default=False, description="COPPA compliance flag")
     synthetic_content_disclosure: bool = Field(
         default=True, description="YouTube synthetic content disclosure"

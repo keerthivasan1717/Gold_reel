@@ -25,8 +25,21 @@ def test_cli_plan():
     assert "[Plan] Topic planning complete" in result.stdout
 
 
+def test_cli_plan_portrait():
+    result = runner.invoke(app, ["plan", "--lane", "sports", "--format", "portrait"])
+    assert result.exit_code == 0
+    assert "[Plan] Topic planning complete" in result.stdout
+
+
 def test_cli_make_dry_run():
     result = runner.invoke(app, ["make", "--dry-run", "--lane", "sports"])
+    assert result.exit_code == 0
+    assert "[Make] Starting production" in result.stdout
+    assert "Pipeline completed" in result.stdout
+
+
+def test_cli_make_portrait_dry_run():
+    result = runner.invoke(app, ["make", "--dry-run", "--lane", "sports", "--format", "portrait", "--duration", "45.0"])
     assert result.exit_code == 0
     assert "[Make] Starting production" in result.stdout
     assert "Pipeline completed" in result.stdout

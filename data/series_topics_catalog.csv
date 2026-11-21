@@ -1,0 +1,76 @@
+#,topic_id,lane,sport,yt_title,popular_people,metric,source,tier,angle
+1,ipl_most_sixes,sports,cricket,IPL Six-Hitting Kings: Most Sixes in History (2008-2026),Rohit Sharma; Chris Gayle; MS Dhoni; Virat Kohli,IPL career sixes,cricsheet,A,Gayle's lead vs Rohit's chase
+2,ipl_most_fours,sports,cricket,IPL Boundary Machines: Most Fours of All Time,Shikhar Dhawan; Virat Kohli; David Warner,IPL career fours,cricsheet,B,Dhawan vs Kohli
+3,ipl_most_centuries,sports,cricket,Who Has the Most IPL Centuries? Kohli vs Buttler vs Gayle,Virat Kohli; Jos Buttler; Chris Gayle; KL Rahul,IPL career hundreds,cricsheet,A,Kohli's lead
+4,ipl_most_fifties,sports,cricket,"IPL Most 50+ Scores Ever: Warner, Kohli, Dhawan",David Warner; Virat Kohli; Shikhar Dhawan,IPL 50+ scores,cricsheet,B,consistency kings
+5,ipl_most_potm,sports,cricket,IPL Player of the Match Kings: AB de Villiers vs Gayle vs Kohli,AB de Villiers; Chris Gayle; Virat Kohli; Rohit Sharma,IPL POTM awards,cricsheet,A,"match-winners, not run-scorers"
+6,ipl_most_catches,sports,cricket,Best Fielders in IPL History: Most Catches Ever,Virat Kohli; Suresh Raina; Ravindra Jadeja; Rohit Sharma,IPL catches,cricsheet,B,fielding legends
+7,ipl_keeper_dismissals,sports,cricket,IPL Wicketkeeper Dismissals: Dhoni vs Karthik vs Pant,MS Dhoni; Dinesh Karthik; Rishabh Pant; Wriddhiman Saha,IPL keeper dismissals,cricsheet,A,Thala's keeping legacy
+8,ipl_most_ducks,sports,cricket,IPL Most Ducks Ever: The Unwanted Record,Rohit Sharma; Dinesh Karthik; Glenn Maxwell,IPL ducks,cricsheet,A,funny/shock factor
+9,ipl_most_dot_balls,sports,cricket,IPL Dot Ball Masters: Who Bowled the Most Dots?,Jasprit Bumrah; Bhuvneshwar Kumar; Sunil Narine; R Ashwin,IPL dot balls bowled,cricsheet,B,pressure bowlers
+10,ipl_powerplay_runs,sports,cricket,IPL Powerplay Kings: Most Runs in Overs 1-6,Rohit Sharma; David Warner; Shikhar Dhawan; Virat Kohli,IPL powerplay runs,cricsheet,B,openers' war
+11,ipl_death_overs_runs,sports,cricket,IPL Death Overs Finishers: Most Runs in Overs 16-20,MS Dhoni; Kieron Pollard; Hardik Pandya; Rohit Sharma,IPL death-over runs,cricsheet,A,Dhoni finisher myth
+12,ipl_best_strike_rate,sports,cricket,IPL Highest Strike Rate (Min 1000 Runs) Season by Season,Andre Russell; AB de Villiers; Suryakumar Yadav,"IPL strike rate, min runs",cricsheet,B,hitters ranking
+13,ipl_captain_wins,sports,cricket,IPL Most Successful Captains: Dhoni vs Rohit vs Kohli vs Gambhir,MS Dhoni; Rohit Sharma; Virat Kohli; Gautam Gambhir,IPL wins as captain,cricsheet,A,captaincy debate
+14,ipl_team_wins,sports,cricket,IPL Team Wins Race: CSK vs MI vs KKR vs RCB,MS Dhoni; Rohit Sharma; Virat Kohli,IPL franchise all-time wins,cricsheet,A,fan-war topic
+15,ipl_csk_runs,sports,cricket,Most Runs for CSK in IPL History,MS Dhoni; Suresh Raina; Ruturaj Gaikwad; Faf du Plessis,runs for CSK,cricsheet,A,Chennai audience
+16,ipl_mi_runs,sports,cricket,Most Runs for Mumbai Indians in IPL History,Rohit Sharma; Suryakumar Yadav; Kieron Pollard; Ishan Kishan,runs for MI,cricsheet,B,MI fans
+17,ipl_rcb_runs,sports,cricket,Most Runs for RCB: Kohli's Mountain,Virat Kohli; AB de Villiers; Chris Gayle,runs for RCB,cricsheet,A,Kohli's loyalty
+18,ipl_kkr_wickets,sports,cricket,Most Wickets for KKR in IPL History,Sunil Narine; Varun Chakravarthy; Andre Russell,wickets for KKR,cricsheet,B,Narine's reign
+19,ipl_spin_vs_pace,sports,cricket,IPL Spinners vs Pacers: Who Took More Wickets Over Time?,Yuzvendra Chahal; Jasprit Bumrah; R Ashwin; Lasith Malinga,wickets by bowling type,cricsheet,B,spin vs pace debate
+20,ipl_runs_after_35,sports,cricket,"IPL Runs After Age 35: Dhoni, Kohli, Gayle",MS Dhoni; Virat Kohli; Chris Gayle,IPL runs scored at age 35+,cricsheet,A,ageless legends
+21,ipl_chasing_runs,sports,cricket,IPL Run Chase Kings: Most Runs Batting Second,Virat Kohli; Shikhar Dhawan; MS Dhoni,IPL runs batting second,cricsheet,A,chase master
+22,ipl_final_runs,sports,cricket,IPL Final Specialists: Most Runs in Finals,MS Dhoni; Suresh Raina; Rohit Sharma,runs in IPL finals,cricsheet,B,big-match players
+23,odi_most_runs,sports,cricket,Most ODI Runs of All Time: Kohli vs Tendulkar vs Sangakkara,Sachin Tendulkar; Virat Kohli; Kumar Sangakkara; Ricky Ponting,ODI career runs,cricsheet,A,Kohli chasing Sachin
+24,odi_most_sixes,sports,cricket,ODI Sixes Leaderboard: Rohit vs Afridi vs Gayle,Rohit Sharma; Shahid Afridi; Chris Gayle; MS Dhoni,ODI sixes,cricsheet,A,six-hitting legends
+25,odi_most_wickets,sports,cricket,"Most ODI Wickets Ever: Murali, Wasim, Waqar",Muttiah Muralitharan; Wasim Akram; Waqar Younis; Jasprit Bumrah,ODI wickets,cricsheet,B,bowling greats
+26,odi_chasing_centuries,sports,cricket,ODI Centuries While Chasing: Kohli's Domination,Virat Kohli; Sachin Tendulkar; Rohit Sharma,ODI chasing hundreds,cricsheet,A,chase king
+27,t20i_most_runs,sports,cricket,Most T20I Runs: Kohli vs Rohit vs Babar vs Buttler,Virat Kohli; Rohit Sharma; Babar Azam; Jos Buttler,T20I runs,cricsheet,A,big four debate
+28,t20i_most_sixes,sports,cricket,Most T20I Sixes Ever,Rohit Sharma; Martin Guptill; Jos Buttler; Suryakumar Yadav,T20I sixes,cricsheet,A,hitting power
+29,t20i_most_wickets,sports,cricket,T20I Wicket Leaders: Rashid Khan vs Bumrah vs Arshdeep,Rashid Khan; Jasprit Bumrah; Arshdeep Singh; Shakib Al Hasan,T20I wickets,cricsheet,A,T20 bowling kings
+30,test_most_runs,sports,cricket,Test Cricket Run Mountain: Tendulkar vs Root vs Ponting vs Kohli,Sachin Tendulkar; Joe Root; Ricky Ponting; Virat Kohli,Test career runs,cricsheet,A,Root chasing Sachin
+31,test_centuries,sports,cricket,"Most Test Centuries: Tendulkar, Root, Kohli, Smith",Sachin Tendulkar; Joe Root; Virat Kohli; Steve Smith,Test hundreds,cricsheet,A,modern vs legends
+32,test_wickets,sports,cricket,"Most Test Wickets: Murali, Warne, Anderson, Ashwin, Kumble",Muttiah Muralitharan; Shane Warne; James Anderson; R Ashwin; Anil Kumble,Test wickets,cricsheet,A,spin legends
+33,world_cup_runs,sports,cricket,Most Runs in Cricket World Cups: Tendulkar vs Kohli vs Rohit,Sachin Tendulkar; Virat Kohli; Rohit Sharma; Ricky Ponting,World Cup career runs,cricsheet,A,WC legacy
+34,world_cup_wickets,sports,cricket,"Most Wickets in Cricket World Cups: McGrath, Starc, Shami",Glenn McGrath; Mitchell Starc; Mohammed Shami; Muttiah Muralitharan,World Cup career wickets,cricsheet,A,Shami's surge
+35,ind_vs_pak_runs,sports,cricket,Most Runs in India vs Pakistan Matches,Virat Kohli; Sachin Tendulkar; Rohit Sharma; Babar Azam,runs in IND v PAK,cricsheet,A,highest-engagement rivalry
+36,ind_vs_aus_runs,sports,cricket,Most Runs in India vs Australia Matches,Sachin Tendulkar; Virat Kohli; Steve Smith; Ricky Ponting,runs in IND v AUS,cricsheet,B,border-gavaskar vibe
+37,indian_captain_wins,sports,cricket,"Most Successful Indian Captains: Dhoni, Kohli, Rohit, Ganguly",MS Dhoni; Virat Kohli; Rohit Sharma; Sourav Ganguly,wins as India captain,cricsheet,A,captain comparison
+38,indian_bowlers_wickets,sports,cricket,"Top Indian Wicket-Takers All Formats: Kumble, Ashwin, Bumrah",Anil Kumble; R Ashwin; Jasprit Bumrah; Harbhajan Singh; Kapil Dev,"wickets for India, all formats",cricsheet,A,Indian bowling legacy
+39,intl_centuries_all,sports,cricket,Most International Centuries All Formats: Sachin's 100 vs Kohli,Sachin Tendulkar; Virat Kohli; Ricky Ponting,international hundreds,cricsheet,A,chase for 100
+40,intl_sixes_all,sports,cricket,Most International Sixes All Formats,Rohit Sharma; Chris Gayle; Martin Guptill; MS Dhoni,international sixes,cricsheet,A,six-hitters
+41,intl_catches,sports,cricket,Most Catches in International Cricket,Rahul Dravid; Mahela Jayawardene; Virat Kohli; Ricky Ponting,international catches,cricsheet,B,fielding greats
+42,keeper_dismissals_intl,sports,cricket,International Wicketkeeper Dismissals: Sangakkara vs Gilchrist vs Dhoni,Kumar Sangakkara; Adam Gilchrist; MS Dhoni; Mark Boucher,international dismissals,cricsheet,A,keeper GOAT debate
+43,womens_t20i_runs,sports,cricket,"Women's T20I Run Scorers: Mandhana, Harmanpreet, Bates",Smriti Mandhana; Harmanpreet Kaur; Suzie Bates,women's T20I runs,cricsheet,B,growing audience
+44,ucl_all_time_goals,sports,football,Champions League All-Time Top Scorers: Ronaldo vs Messi vs Lewandowski,Cristiano Ronaldo; Lionel Messi; Robert Lewandowski; Karim Benzema,UCL career goals,openfootball_or_wikipedia_manual,A,Ronaldo's untouchable lead
+45,messi_ronaldo_goals_by_year,sports,football,Messi vs Ronaldo: Career Goals Year by Year,Lionel Messi; Cristiano Ronaldo,career goals per year,wikipedia_manual,A,the eternal debate
+46,messi_ronaldo_assists_by_year,sports,football,Messi vs Ronaldo: Career Assists Year by Year,Lionel Messi; Cristiano Ronaldo,career assists per year,wikipedia_manual,A,Messi playmaking edge
+47,big7_goals_by_age,sports,football,"Goals by Age: Messi, Ronaldo, Mbappe, Haaland, Yamal, Neymar, Kane",Lionel Messi; Cristiano Ronaldo; Kylian Mbappe; Erling Haaland; Lamine Yamal; Neymar Jr; Harry Kane,cumulative career goals by age,wikipedia_manual,A,ALL requested stars in one video
+48,la_liga_all_time_goals,sports,football,"La Liga All-Time Top Scorers: Messi, Ronaldo, Zarra",Lionel Messi; Cristiano Ronaldo; Telmo Zarra,La Liga goals,openfootball,A,Messi's decade
+49,pl_all_time_assists,sports,football,"Premier League Assist Kings: Giggs, Fabregas, De Bruyne, Salah",Ryan Giggs; Cesc Fabregas; Kevin De Bruyne; Mohamed Salah,PL assists,openfootball_or_wikipedia_manual,B,playmakers
+50,pl_hat_tricks,sports,football,"Premier League Hat-Trick Kings: Aguero, Kane, Salah, Haaland",Sergio Aguero; Harry Kane; Mohamed Salah; Erling Haaland,PL hat-tricks,openfootball,A,Haaland's pace
+51,pl_fastest_to_100,sports,football,Fastest to 100 Premier League Goals: Haaland vs Kane vs Aguero,Erling Haaland; Harry Kane; Sergio Aguero; Mohamed Salah,goals vs matches played,openfootball,A,per-match race
+52,pl_man_city_goals,sports,football,Most Premier League Goals for Man City,Sergio Aguero; Erling Haaland; Raheem Sterling,PL goals for Man City,openfootball,B,Haaland rising
+53,pl_spurs_goals,sports,football,Most Premier League Goals for Tottenham,Harry Kane; Son Heung-min; Jermain Defoe,PL goals for Spurs,openfootball,B,Kane's legacy
+54,world_cup_goals,sports,football,"World Cup All-Time Top Scorers: Klose, Messi, Mbappe",Miroslav Klose; Lionel Messi; Kylian Mbappe; Ronaldo Nazario,World Cup goals,wikipedia_manual,A,Mbappe's pace
+55,intl_goals_all_time,sports,football,"Most International Goals Ever: Ronaldo, Messi, Ali Daei, Sunil Chhetri",Cristiano Ronaldo; Lionel Messi; Sunil Chhetri; Ali Daei,international goals,wikipedia_manual,A,Chhetri India hook
+56,ballon_dor_wins,sports,football,Ballon d'Or Wins Over Time: Messi vs Ronaldo,Lionel Messi; Cristiano Ronaldo; Michel Platini; Johan Cruyff,Ballon d'Or wins,wikipedia_manual,A,awards race
+57,bundesliga_goals,sports,football,"Bundesliga All-Time Top Scorers: Lewandowski, Muller, Kane",Robert Lewandowski; Harry Kane; Thomas Muller,Bundesliga goals,openfootball,B,Kane at Bayern
+58,ligue1_goals,sports,football,"Ligue 1 Top Scorers: Mbappe, Neymar, Ibrahimovic at PSG",Kylian Mbappe; Neymar Jr; Zlatan Ibrahimovic,Ligue 1 goals,openfootball,A,PSG era
+59,serie_a_goals,sports,football,"Serie A All-Time Scorers: Piola, Totti, Ronaldo",Cristiano Ronaldo; Francesco Totti; Silvio Piola,Serie A goals,openfootball,B,Ronaldo in Italy
+60,neymar_goals_by_club,sports,football,"Neymar Goals by Club: Santos, Barcelona, PSG, Al Hilal",Neymar Jr,career goals per club,wikipedia_manual,A,Neymar career arc
+61,goals_in_calendar_year,sports,football,Most Goals in a Calendar Year: Messi 2012 vs Haaland vs Mbappe,Lionel Messi; Erling Haaland; Kylian Mbappe; Robert Lewandowski,goals per calendar year,wikipedia_manual,A,peak-year comparison
+62,el_clasico_goals,sports,football,El Clasico Top Scorers: Messi vs Ronaldo,Lionel Messi; Cristiano Ronaldo,El Clasico goals,wikipedia_manual,A,rivalry
+63,transfer_fee_records,sports,football,"World Record Transfer Fees Over Time: Neymar, Mbappe",Neymar Jr; Kylian Mbappe; Cristiano Ronaldo; Gareth Bale,record fee by year,wikipedia_manual,A,money headlines
+64,euro_goals,sports,football,"Euros All-Time Top Scorers: Ronaldo, Platini, Kane",Cristiano Ronaldo; Michel Platini; Harry Kane,European Championship goals,wikipedia_manual,B,Ronaldo record
+65,yamal_youngest_records,sports,football,Lamine Yamal vs Legends: Youngest to Reach Milestones,Lamine Yamal; Pele; Kylian Mbappe; Lionel Messi,milestones by age,wikipedia_manual,A,Yamal hype
+66,ucl_goals_by_match_haaland,sports,football,Haaland vs Messi vs Ronaldo vs Mbappe: UCL Goals by Matches Played,Erling Haaland; Lionel Messi; Cristiano Ronaldo; Kylian Mbappe,UCL goals vs matches played,wikipedia_manual,A,pace comparison
+67,f1_wins,sports,other,F1 All-Time Race Wins: Hamilton vs Schumacher vs Verstappen,Lewis Hamilton; Michael Schumacher; Max Verstappen,F1 wins,jolpica_f1_api,B,small-share sports
+68,tennis_grand_slams,sports,other,"Grand Slam Titles Race: Djokovic, Nadal, Federer",Novak Djokovic; Rafael Nadal; Roger Federer,Grand Slam titles,wikipedia_manual,B,big three
+69,nba_career_points,sports,other,NBA All-Time Scoring: LeBron vs Kareem vs Jordan,LeBron James; Kareem Abdul-Jabbar; Michael Jordan,NBA career points,wikipedia_manual,B,LeBron passes Kareem
+70,olympic_golds,sports,other,Olympic Gold Medals: Phelps and Beyond,Michael Phelps; Usain Bolt,Olympic golds,wikipedia_manual,B,Olympic icons
+71,f1_poles,sports,other,"F1 Pole Positions All-Time: Hamilton, Senna, Verstappen",Lewis Hamilton; Ayrton Senna; Max Verstappen,F1 poles,jolpica_f1_api,B,qualifying kings
+72,indian_actor_box_office,movies,movies,"Indian Actors by Box Office Over the Years: Rajinikanth, SRK, Vijay, Prabhas",Rajinikanth; Shah Rukh Khan; Vijay; Prabhas; Allu Arjun,reported worldwide gross,wikipedia_plus_tmdb,A,"reported figures, disputed; label as reported"
+73,rajini_vs_vijay_vs_ajith,movies,movies,Rajinikanth vs Vijay vs Ajith: Biggest Tamil Hits Timeline,Rajinikanth; Vijay; Ajith Kumar,reported gross per film,wikipedia_plus_tmdb,A,Chennai audience; label as reported
+74,hollywood_actor_gross,movies,movies,"Highest-Grossing Hollywood Actors Over Time: RDJ, Samuel L. Jackson",Robert Downey Jr.; Samuel L. Jackson; Scarlett Johansson,cumulative worldwide gross,wikipedia_plus_tmdb,B,future lane
+75,oscar_nominations,movies,movies,Most Oscar Nominations Ever: Meryl Streep and Others,Meryl Streep; Jack Nicholson; Daniel Day-Lewis,Oscar nominations/wins,wikipedia_manual,B,future lane

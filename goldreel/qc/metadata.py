@@ -204,16 +204,16 @@ class MetadataQC:
             )
 
             if not is_dry_run:
-                target_pass = 30.0 <= duration_sec <= 45.0
+                target_pass = 30.0 <= duration_sec <= 60.0
                 checks.append(
                     QCCheckItem(
                         name="short_target_duration",
                         category="duration",
                         passed=target_pass,
                         severity="warning",
-                        message=f"Short duration {duration_sec:.1f}s within target 30-45s cadence",
+                        message=f"Short duration {duration_sec:.1f}s within target 30-60s cadence",
                         measured_value=round(duration_sec, 2),
-                        target_value="30.0 to 45.0s",
+                        target_value="30.0 to 60.0s",
                     )
                 )
             else:

@@ -54,5 +54,6 @@ select = [
 ]
 ignore = [
     "E501", # Line length handled by formatter
+    "B008", # Typer requires function calls in argument defaults
 ]
 

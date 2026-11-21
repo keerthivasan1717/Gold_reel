@@ -189,6 +189,11 @@ def test_metadata_qc_duration_bounds():
     assert next(c for c in checks_pass if c.name == "short_hard_ceiling").passed is True
     assert next(c for c in checks_pass if c.name == "short_target_duration").passed is True
 
+    # Short at 55.0s (within 30-60s range) passes
+    checks_55 = qc.check_duration(55.0, format_type="portrait", is_dry_run=False)
+    assert next(c for c in checks_55 if c.name == "short_hard_ceiling").passed is True
+    assert next(c for c in checks_55 if c.name == "short_target_duration").passed is True
+
     # Short > 60s fails YouTube Shorts criteria
     checks_fail = qc.check_duration(65.0, format_type="portrait", is_dry_run=False)
     assert next(c for c in checks_fail if c.name == "short_hard_ceiling").passed is False

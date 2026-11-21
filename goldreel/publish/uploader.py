@@ -50,11 +50,11 @@ class YouTubeUploader:
         """Assemble complete publishing metadata package from job artifacts."""
         script_path = job.job_dir / "script.json"
         credits_path = job.job_dir / "credits.txt"
+        facts_path = job.job_dir / "facts.json"
 
         title = "GoldReel Data Insights"
         format_type = "landscape"
-        tags = ["data", "visualization", "statistics", "records"]
-
+        s_data = {}
         if script_path.exists():
             try:
                 with open(script_path, encoding="utf-8") as f:
@@ -64,23 +64,89 @@ class YouTubeUploader:
             except Exception:
                 pass
 
-        description = "Automated data visualization by GoldReel."
-        if credits_path.exists():
+        f_data = {}
+        if facts_path.exists():
             try:
-                description = credits_path.read_text(encoding="utf-8")
+                with open(facts_path, encoding="utf-8") as f:
+                    f_data = json.load(f)
             except Exception:
                 pass
 
+        # Build dynamic SEO tags
+        raw_tags: list[str] = ["statistics", "records", "data visualization"]
+        lane = f_data.get("lane", s_data.get("lane", "sports"))
+        if lane:
+            raw_tags.append(str(lane).lower())
+
+        title_lower = title.lower()
+        if "ipl" in title_lower or "cricket" in title_lower or "cricsheet" in str(f_data).lower():
+            raw_tags.extend(["cricket", "ipl", "cricket stats", "ipl records"])
+        elif "premier league" in title_lower or "football" in title_lower or "goal" in title_lower:
+            raw_tags.extend(["football", "premier league", "soccer", "all time goals"])
+
+        # Add player/entity names
+        entities = [r.get("entity") for r in f_data.get("records", []) if r.get("entity")]
+        for ent in entities[:6]:
+            if ent and ent not in raw_tags:
+                raw_tags.append(str(ent))
+
+        if format_type == "portrait":
+            raw_tags.extend(["shorts", "ytshorts", "shortsvideo", "viral"])
+        else:
+            raw_tags.extend(["stat race", "bar chart race", "timeline"])
+
+        # Deduplicate while preserving order
+        seen = set()
+        tags = []
+        for t in raw_tags:
+            tl = t.strip()
+            if tl.lower() not in seen:
+                seen.add(tl.lower())
+                tags.append(tl)
+
+        # Assemble rich description with hook, insight, hashtags, and attribution
+        desc_parts = []
+        hook = s_data.get("hook_text")
+        insight = s_data.get("stated_insight")
+        if hook:
+            desc_parts.append(f"{hook}\n")
+        if insight:
+            desc_parts.append(f"{insight}\n")
+
+        # Add top 3-4 hashtags
+        hashtags = ["#Stats", "#DataVisualization"]
+        if "cricket" in raw_tags or "ipl" in raw_tags:
+            hashtags.insert(0, "#Cricket")
+            hashtags.insert(1, "#IPL")
+        elif "football" in raw_tags:
+            hashtags.insert(0, "#Football")
+            hashtags.insert(1, "#PremierLeague")
+        if format_type == "portrait":
+            hashtags.append("#Shorts")
+        desc_parts.append(" ".join(hashtags) + "\n")
+
+        credits_text = "Automated data visualization by GoldReel."
+        if credits_path.exists():
+            try:
+                credits_text = credits_path.read_text(encoding="utf-8")
+            except Exception:
+                pass
+        desc_parts.append(credits_text)
+        description = "\n".join(desc_parts)
+
         # Compute scheduled release timestamp
         publish_at = self.scheduler.compute_publish_time(format_type=format_type)
+
+        category = "17" if (lane == "sports" or any(s in title_lower for s in ["ipl", "cricket", "football", "goal", "wicket"])) else "28"
 
         return PublishMetadata(
             title=title[:100],
             description=description[:5000],
             tags=tags,
-            category_id="28" if "sports" not in title.lower() else "17",
+            category_id=category,
             privacy_status="private",
             publish_at=publish_at,
+            format_type=format_type,
             made_for_kids=self.config.publishing.made_for_kids,
             synthetic_content_disclosure=self.config.publishing.synthetic_content_disclosure,
         )
@@ -288,6 +354,7 @@ class YouTubeUploader:
             video_id=video_id,
             scheduled_at=metadata.publish_at,
             mode="scheduled",
+            format_type=metadata.format_type,
         )
 
         result = PublishResult(

@@ -1,0 +1,1170 @@
+[
+  {
+    "topic_id": "ipl_most_sixes",
+    "lane": "sports",
+    "sport": "cricket",
+    "yt_title": "IPL Six-Hitting Kings: Most Sixes in History (2008-2026)",
+    "popular_people": [
+      "Rohit Sharma",
+      "Chris Gayle",
+      "MS Dhoni",
+      "Virat Kohli"
+    ],
+    "metric": "IPL career sixes",
+    "source": "cricsheet",
+    "tier": "A",
+    "angle": "Gayle's lead vs Rohit's chase"
+  },
+  {
+    "topic_id": "ipl_most_fours",
+    "lane": "sports",
+    "sport": "cricket",
+    "yt_title": "IPL Boundary Machines: Most Fours of All Time",
+    "popular_people": [
+      "Shikhar Dhawan",
+      "Virat Kohli",
+      "David Warner"
+    ],
+    "metric": "IPL career fours",
+    "source": "cricsheet",
+    "tier": "B",
+    "angle": "Dhawan vs Kohli"
+  },
+  {
+    "topic_id": "ipl_most_centuries",
+    "lane": "sports",
+    "sport": "cricket",
+    "yt_title": "Who Has the Most IPL Centuries? Kohli vs Buttler vs Gayle",
+    "popular_people": [
+      "Virat Kohli",
+      "Jos Buttler",
+      "Chris Gayle",
+      "KL Rahul"
+    ],
+    "metric": "IPL career hundreds",
+    "source": "cricsheet",
+    "tier": "A",
+    "angle": "Kohli's lead"
+  },
+  {
+    "topic_id": "ipl_most_fifties",
+    "lane": "sports",
+    "sport": "cricket",
+    "yt_title": "IPL Most 50+ Scores Ever: Warner, Kohli, Dhawan",
+    "popular_people": [
+      "David Warner",
+      "Virat Kohli",
+      "Shikhar Dhawan"
+    ],
+    "metric": "IPL 50+ scores",
+    "source": "cricsheet",
+    "tier": "B",
+    "angle": "consistency kings"
+  },
+  {
+    "topic_id": "ipl_most_potm",
+    "lane": "sports",
+    "sport": "cricket",
+    "yt_title": "IPL Player of the Match Kings: AB de Villiers vs Gayle vs Kohli",
+    "popular_people": [
+      "AB de Villiers",
+      "Chris Gayle",
+      "Virat Kohli",
+      "Rohit Sharma"
+    ],
+    "metric": "IPL POTM awards",
+    "source": "cricsheet",
+    "tier": "A",
+    "angle": "match-winners, not run-scorers"
+  },
+  {
+    "topic_id": "ipl_most_catches",
+    "lane": "sports",
+    "sport": "cricket",
+    "yt_title": "Best Fielders in IPL History: Most Catches Ever",
+    "popular_people": [
+      "Virat Kohli",
+      "Suresh Raina",
+      "Ravindra Jadeja",
+      "Rohit Sharma"
+    ],
+    "metric": "IPL catches",
+    "source": "cricsheet",
+    "tier": "B",
+    "angle": "fielding legends"
+  },
+  {
+    "topic_id": "ipl_keeper_dismissals",
+    "lane": "sports",
+    "sport": "cricket",
+    "yt_title": "IPL Wicketkeeper Dismissals: Dhoni vs Karthik vs Pant",
+    "popular_people": [
+      "MS Dhoni",
+      "Dinesh Karthik",
+      "Rishabh Pant",
+      "Wriddhiman Saha"
+    ],
+    "metric": "IPL keeper dismissals",
+    "source": "cricsheet",
+    "tier": "A",
+    "angle": "Thala's keeping legacy"
+  },
+  {
+    "topic_id": "ipl_most_ducks",
+    "lane": "sports",
+    "sport": "cricket",
+    "yt_title": "IPL Most Ducks Ever: The Unwanted Record",
+    "popular_people": [
+      "Rohit Sharma",
+      "Dinesh Karthik",
+      "Glenn Maxwell"
+    ],
+    "metric": "IPL ducks",
+    "source": "cricsheet",
+    "tier": "A",
+    "angle": "funny/shock factor"
+  },
+  {
+    "topic_id": "ipl_most_dot_balls",
+    "lane": "sports",
+    "sport": "cricket",
+    "yt_title": "IPL Dot Ball Masters: Who Bowled the Most Dots?",
+    "popular_people": [
+      "Jasprit Bumrah",
+      "Bhuvneshwar Kumar",
+      "Sunil Narine",
+      "R Ashwin"
+    ],
+    "metric": "IPL dot balls bowled",
+    "source": "cricsheet",
+    "tier": "B",
+    "angle": "pressure bowlers"
+  },
+  {
+    "topic_id": "ipl_powerplay_runs",
+    "lane": "sports",
+    "sport": "cricket",
+    "yt_title": "IPL Powerplay Kings: Most Runs in Overs 1-6",
+    "popular_people": [
+      "Rohit Sharma",
+      "David Warner",
+      "Shikhar Dhawan",
+      "Virat Kohli"
+    ],
+    "metric": "IPL powerplay runs",
+    "source": "cricsheet",
+    "tier": "B",
+    "angle": "openers' war"
+  },
+  {
+    "topic_id": "ipl_death_overs_runs",
+    "lane": "sports",
+    "sport": "cricket",
+    "yt_title": "IPL Death Overs Finishers: Most Runs in Overs 16-20",
+    "popular_people": [
+      "MS Dhoni",
+      "Kieron Pollard",
+      "Hardik Pandya",
+      "Rohit Sharma"
+    ],
+    "metric": "IPL death-over runs",
+    "source": "cricsheet",
+    "tier": "A",
+    "angle": "Dhoni finisher myth"
+  },
+  {
+    "topic_id": "ipl_best_strike_rate",
+    "lane": "sports",
+    "sport": "cricket",
+    "yt_title": "IPL Highest Strike Rate (Min 1000 Runs) Season by Season",
+    "popular_people": [
+      "Andre Russell",
+      "AB de Villiers",
+      "Suryakumar Yadav"
+    ],
+    "metric": "IPL strike rate, min runs",
+    "source": "cricsheet",
+    "tier": "B",
+    "angle": "hitters ranking"
+  },
+  {
+    "topic_id": "ipl_captain_wins",
+    "lane": "sports",
+    "sport": "cricket",
+    "yt_title": "IPL Most Successful Captains: Dhoni vs Rohit vs Kohli vs Gambhir",
+    "popular_people": [
+      "MS Dhoni",
+      "Rohit Sharma",
+      "Virat Kohli",
+      "Gautam Gambhir"
+    ],
+    "metric": "IPL wins as captain",
+    "source": "cricsheet",
+    "tier": "A",
+    "angle": "captaincy debate"
+  },
+  {
+    "topic_id": "ipl_team_wins",
+    "lane": "sports",
+    "sport": "cricket",
+    "yt_title": "IPL Team Wins Race: CSK vs MI vs KKR vs RCB",
+    "popular_people": [
+      "MS Dhoni",
+      "Rohit Sharma",
+      "Virat Kohli"
+    ],
+    "metric": "IPL franchise all-time wins",
+    "source": "cricsheet",
+    "tier": "A",
+    "angle": "fan-war topic"
+  },
+  {
+    "topic_id": "ipl_csk_runs",
+    "lane": "sports",
+    "sport": "cricket",
+    "yt_title": "Most Runs for CSK in IPL History",
+    "popular_people": [
+      "MS Dhoni",
+      "Suresh Raina",
+      "Ruturaj Gaikwad",
+      "Faf du Plessis"
+    ],
+    "metric": "runs for CSK",
+    "source": "cricsheet",
+    "tier": "A",
+    "angle": "Chennai audience"
+  },
+  {
+    "topic_id": "ipl_mi_runs",
+    "lane": "sports",
+    "sport": "cricket",
+    "yt_title": "Most Runs for Mumbai Indians in IPL History",
+    "popular_people": [
+      "Rohit Sharma",
+      "Suryakumar Yadav",
+      "Kieron Pollard",
+      "Ishan Kishan"
+    ],
+    "metric": "runs for MI",
+    "source": "cricsheet",
+    "tier": "B",
+    "angle": "MI fans"
+  },
+  {
+    "topic_id": "ipl_rcb_runs",
+    "lane": "sports",
+    "sport": "cricket",
+    "yt_title": "Most Runs for RCB: Kohli's Mountain",
+    "popular_people": [
+      "Virat Kohli",
+      "AB de Villiers",
+      "Chris Gayle"
+    ],
+    "metric": "runs for RCB",
+    "source": "cricsheet",
+    "tier": "A",
+    "angle": "Kohli's loyalty"
+  },
+  {
+    "topic_id": "ipl_kkr_wickets",
+    "lane": "sports",
+    "sport": "cricket",
+    "yt_title": "Most Wickets for KKR in IPL History",
+    "popular_people": [
+      "Sunil Narine",
+      "Varun Chakravarthy",
+      "Andre Russell"
+    ],
+    "metric": "wickets for KKR",
+    "source": "cricsheet",
+    "tier": "B",
+    "angle": "Narine's reign"
+  },
+  {
+    "topic_id": "ipl_spin_vs_pace",
+    "lane": "sports",
+    "sport": "cricket",
+    "yt_title": "IPL Spinners vs Pacers: Who Took More Wickets Over Time?",
+    "popular_people": [
+      "Yuzvendra Chahal",
+      "Jasprit Bumrah",
+      "R Ashwin",
+      "Lasith Malinga"
+    ],
+    "metric": "wickets by bowling type",
+    "source": "cricsheet",
+    "tier": "B",
+    "angle": "spin vs pace debate"
+  },
+  {
+    "topic_id": "ipl_runs_after_35",
+    "lane": "sports",
+    "sport": "cricket",
+    "yt_title": "IPL Runs After Age 35: Dhoni, Kohli, Gayle",
+    "popular_people": [
+      "MS Dhoni",
+      "Virat Kohli",
+      "Chris Gayle"
+    ],
+    "metric": "IPL runs scored at age 35+",
+    "source": "cricsheet",
+    "tier": "A",
+    "angle": "ageless legends"
+  },
+  {
+    "topic_id": "ipl_chasing_runs",
+    "lane": "sports",
+    "sport": "cricket",
+    "yt_title": "IPL Run Chase Kings: Most Runs Batting Second",
+    "popular_people": [
+      "Virat Kohli",
+      "Shikhar Dhawan",
+      "MS Dhoni"
+    ],
+    "metric": "IPL runs batting second",
+    "source": "cricsheet",
+    "tier": "A",
+    "angle": "chase master"
+  },
+  {
+    "topic_id": "ipl_final_runs",
+    "lane": "sports",
+    "sport": "cricket",
+    "yt_title": "IPL Final Specialists: Most Runs in Finals",
+    "popular_people": [
+      "MS Dhoni",
+      "Suresh Raina",
+      "Rohit Sharma"
+    ],
+    "metric": "runs in IPL finals",
+    "source": "cricsheet",
+    "tier": "B",
+    "angle": "big-match players"
+  },
+  {
+    "topic_id": "odi_most_runs",
+    "lane": "sports",
+    "sport": "cricket",
+    "yt_title": "Most ODI Runs of All Time: Kohli vs Tendulkar vs Sangakkara",
+    "popular_people": [
+      "Sachin Tendulkar",
+      "Virat Kohli",
+      "Kumar Sangakkara",
+      "Ricky Ponting"
+    ],
+    "metric": "ODI career runs",
+    "source": "cricsheet",
+    "tier": "A",
+    "angle": "Kohli chasing Sachin"
+  },
+  {
+    "topic_id": "odi_most_sixes",
+    "lane": "sports",
+    "sport": "cricket",
+    "yt_title": "ODI Sixes Leaderboard: Rohit vs Afridi vs Gayle",
+    "popular_people": [
+      "Rohit Sharma",
+      "Shahid Afridi",
+      "Chris Gayle",
+      "MS Dhoni"
+    ],
+    "metric": "ODI sixes",
+    "source": "cricsheet",
+    "tier": "A",
+    "angle": "six-hitting legends"
+  },
+  {
+    "topic_id": "odi_most_wickets",
+    "lane": "sports",
+    "sport": "cricket",
+    "yt_title": "Most ODI Wickets Ever: Murali, Wasim, Waqar",
+    "popular_people": [
+      "Muttiah Muralitharan",
+      "Wasim Akram",
+      "Waqar Younis",
+      "Jasprit Bumrah"
+    ],
+    "metric": "ODI wickets",
+    "source": "cricsheet",
+    "tier": "B",
+    "angle": "bowling greats"
+  },
+  {
+    "topic_id": "odi_chasing_centuries",
+    "lane": "sports",
+    "sport": "cricket",
+    "yt_title": "ODI Centuries While Chasing: Kohli's Domination",
+    "popular_people": [
+      "Virat Kohli",
+      "Sachin Tendulkar",
+      "Rohit Sharma"
+    ],
+    "metric": "ODI chasing hundreds",
+    "source": "cricsheet",
+    "tier": "A",
+    "angle": "chase king"
+  },
+  {
+    "topic_id": "t20i_most_runs",
+    "lane": "sports",
+    "sport": "cricket",
+    "yt_title": "Most T20I Runs: Kohli vs Rohit vs Babar vs Buttler",
+    "popular_people": [
+      "Virat Kohli",
+      "Rohit Sharma",
+      "Babar Azam",
+      "Jos Buttler"
+    ],
+    "metric": "T20I runs",
+    "source": "cricsheet",
+    "tier": "A",
+    "angle": "big four debate"
+  },
+  {
+    "topic_id": "t20i_most_sixes",
+    "lane": "sports",
+    "sport": "cricket",
+    "yt_title": "Most T20I Sixes Ever",
+    "popular_people": [
+      "Rohit Sharma",
+      "Martin Guptill",
+      "Jos Buttler",
+      "Suryakumar Yadav"
+    ],
+    "metric": "T20I sixes",
+    "source": "cricsheet",
+    "tier": "A",
+    "angle": "hitting power"
+  },
+  {
+    "topic_id": "t20i_most_wickets",
+    "lane": "sports",
+    "sport": "cricket",
+    "yt_title": "T20I Wicket Leaders: Rashid Khan vs Bumrah vs Arshdeep",
+    "popular_people": [
+      "Rashid Khan",
+      "Jasprit Bumrah",
+      "Arshdeep Singh",
+      "Shakib Al Hasan"
+    ],
+    "metric": "T20I wickets",
+    "source": "cricsheet",
+    "tier": "A",
+    "angle": "T20 bowling kings"
+  },
+  {
+    "topic_id": "test_most_runs",
+    "lane": "sports",
+    "sport": "cricket",
+    "yt_title": "Test Cricket Run Mountain: Tendulkar vs Root vs Ponting vs Kohli",
+    "popular_people": [
+      "Sachin Tendulkar",
+      "Joe Root",
+      "Ricky Ponting",
+      "Virat Kohli"
+    ],
+    "metric": "Test career runs",
+    "source": "cricsheet",
+    "tier": "A",
+    "angle": "Root chasing Sachin"
+  },
+  {
+    "topic_id": "test_centuries",
+    "lane": "sports",
+    "sport": "cricket",
+    "yt_title": "Most Test Centuries: Tendulkar, Root, Kohli, Smith",
+    "popular_people": [
+      "Sachin Tendulkar",
+      "Joe Root",
+      "Virat Kohli",
+      "Steve Smith"
+    ],
+    "metric": "Test hundreds",
+    "source": "cricsheet",
+    "tier": "A",
+    "angle": "modern vs legends"
+  },
+  {
+    "topic_id": "test_wickets",
+    "lane": "sports",
+    "sport": "cricket",
+    "yt_title": "Most Test Wickets: Murali, Warne, Anderson, Ashwin, Kumble",
+    "popular_people": [
+      "Muttiah Muralitharan",
+      "Shane Warne",
+      "James Anderson",
+      "R Ashwin",
+      "Anil Kumble"
+    ],
+    "metric": "Test wickets",
+    "source": "cricsheet",
+    "tier": "A",
+    "angle": "spin legends"
+  },
+  {
+    "topic_id": "world_cup_runs",
+    "lane": "sports",
+    "sport": "cricket",
+    "yt_title": "Most Runs in Cricket World Cups: Tendulkar vs Kohli vs Rohit",
+    "popular_people": [
+      "Sachin Tendulkar",
+      "Virat Kohli",
+      "Rohit Sharma",
+      "Ricky Ponting"
+    ],
+    "metric": "World Cup career runs",
+    "source": "cricsheet",
+    "tier": "A",
+    "angle": "WC legacy"
+  },
+  {
+    "topic_id": "world_cup_wickets",
+    "lane": "sports",
+    "sport": "cricket",
+    "yt_title": "Most Wickets in Cricket World Cups: McGrath, Starc, Shami",
+    "popular_people": [
+      "Glenn McGrath",
+      "Mitchell Starc",
+      "Mohammed Shami",
+      "Muttiah Muralitharan"
+    ],
+    "metric": "World Cup career wickets",
+    "source": "cricsheet",
+    "tier": "A",
+    "angle": "Shami's surge"
+  },
+  {
+    "topic_id": "ind_vs_pak_runs",
+    "lane": "sports",
+    "sport": "cricket",
+    "yt_title": "Most Runs in India vs Pakistan Matches",
+    "popular_people": [
+      "Virat Kohli",
+      "Sachin Tendulkar",
+      "Rohit Sharma",
+      "Babar Azam"
+    ],
+    "metric": "runs in IND v PAK",
+    "source": "cricsheet",
+    "tier": "A",
+    "angle": "highest-engagement rivalry"
+  },
+  {
+    "topic_id": "ind_vs_aus_runs",
+    "lane": "sports",
+    "sport": "cricket",
+    "yt_title": "Most Runs in India vs Australia Matches",
+    "popular_people": [
+      "Sachin Tendulkar",
+      "Virat Kohli",
+      "Steve Smith",
+      "Ricky Ponting"
+    ],
+    "metric": "runs in IND v AUS",
+    "source": "cricsheet",
+    "tier": "B",
+    "angle": "border-gavaskar vibe"
+  },
+  {
+    "topic_id": "indian_captain_wins",
+    "lane": "sports",
+    "sport": "cricket",
+    "yt_title": "Most Successful Indian Captains: Dhoni, Kohli, Rohit, Ganguly",
+    "popular_people": [
+      "MS Dhoni",
+      "Virat Kohli",
+      "Rohit Sharma",
+      "Sourav Ganguly"
+    ],
+    "metric": "wins as India captain",
+    "source": "cricsheet",
+    "tier": "A",
+    "angle": "captain comparison"
+  },
+  {
+    "topic_id": "indian_bowlers_wickets",
+    "lane": "sports",
+    "sport": "cricket",
+    "yt_title": "Top Indian Wicket-Takers All Formats: Kumble, Ashwin, Bumrah",
+    "popular_people": [
+      "Anil Kumble",
+      "R Ashwin",
+      "Jasprit Bumrah",
+      "Harbhajan Singh",
+      "Kapil Dev"
+    ],
+    "metric": "wickets for India, all formats",
+    "source": "cricsheet",
+    "tier": "A",
+    "angle": "Indian bowling legacy"
+  },
+  {
+    "topic_id": "intl_centuries_all",
+    "lane": "sports",
+    "sport": "cricket",
+    "yt_title": "Most International Centuries All Formats: Sachin's 100 vs Kohli",
+    "popular_people": [
+      "Sachin Tendulkar",
+      "Virat Kohli",
+      "Ricky Ponting"
+    ],
+    "metric": "international hundreds",
+    "source": "cricsheet",
+    "tier": "A",
+    "angle": "chase for 100"
+  },
+  {
+    "topic_id": "intl_sixes_all",
+    "lane": "sports",
+    "sport": "cricket",
+    "yt_title": "Most International Sixes All Formats",
+    "popular_people": [
+      "Rohit Sharma",
+      "Chris Gayle",
+      "Martin Guptill",
+      "MS Dhoni"
+    ],
+    "metric": "international sixes",
+    "source": "cricsheet",
+    "tier": "A",
+    "angle": "six-hitters"
+  },
+  {
+    "topic_id": "intl_catches",
+    "lane": "sports",
+    "sport": "cricket",
+    "yt_title": "Most Catches in International Cricket",
+    "popular_people": [
+      "Rahul Dravid",
+      "Mahela Jayawardene",
+      "Virat Kohli",
+      "Ricky Ponting"
+    ],
+    "metric": "international catches",
+    "source": "cricsheet",
+    "tier": "B",
+    "angle": "fielding greats"
+  },
+  {
+    "topic_id": "keeper_dismissals_intl",
+    "lane": "sports",
+    "sport": "cricket",
+    "yt_title": "International Wicketkeeper Dismissals: Sangakkara vs Gilchrist vs Dhoni",
+    "popular_people": [
+      "Kumar Sangakkara",
+      "Adam Gilchrist",
+      "MS Dhoni",
+      "Mark Boucher"
+    ],
+    "metric": "international dismissals",
+    "source": "cricsheet",
+    "tier": "A",
+    "angle": "keeper GOAT debate"
+  },
+  {
+    "topic_id": "womens_t20i_runs",
+    "lane": "sports",
+    "sport": "cricket",
+    "yt_title": "Women's T20I Run Scorers: Mandhana, Harmanpreet, Bates",
+    "popular_people": [
+      "Smriti Mandhana",
+      "Harmanpreet Kaur",
+      "Suzie Bates"
+    ],
+    "metric": "women's T20I runs",
+    "source": "cricsheet",
+    "tier": "B",
+    "angle": "growing audience"
+  },
+  {
+    "topic_id": "ucl_all_time_goals",
+    "lane": "sports",
+    "sport": "football",
+    "yt_title": "Champions League All-Time Top Scorers: Ronaldo vs Messi vs Lewandowski",
+    "popular_people": [
+      "Cristiano Ronaldo",
+      "Lionel Messi",
+      "Robert Lewandowski",
+      "Karim Benzema"
+    ],
+    "metric": "UCL career goals",
+    "source": "openfootball_or_wikipedia_manual",
+    "tier": "A",
+    "angle": "Ronaldo's untouchable lead"
+  },
+  {
+    "topic_id": "messi_ronaldo_goals_by_year",
+    "lane": "sports",
+    "sport": "football",
+    "yt_title": "Messi vs Ronaldo: Career Goals Year by Year",
+    "popular_people": [
+      "Lionel Messi",
+      "Cristiano Ronaldo"
+    ],
+    "metric": "career goals per year",
+    "source": "wikipedia_manual",
+    "tier": "A",
+    "angle": "the eternal debate"
+  },
+  {
+    "topic_id": "messi_ronaldo_assists_by_year",
+    "lane": "sports",
+    "sport": "football",
+    "yt_title": "Messi vs Ronaldo: Career Assists Year by Year",
+    "popular_people": [
+      "Lionel Messi",
+      "Cristiano Ronaldo"
+    ],
+    "metric": "career assists per year",
+    "source": "wikipedia_manual",
+    "tier": "A",
+    "angle": "Messi playmaking edge"
+  },
+  {
+    "topic_id": "big7_goals_by_age",
+    "lane": "sports",
+    "sport": "football",
+    "yt_title": "Goals by Age: Messi, Ronaldo, Mbappe, Haaland, Yamal, Neymar, Kane",
+    "popular_people": [
+      "Lionel Messi",
+      "Cristiano Ronaldo",
+      "Kylian Mbappe",
+      "Erling Haaland",
+      "Lamine Yamal",
+      "Neymar Jr",
+      "Harry Kane"
+    ],
+    "metric": "cumulative career goals by age",
+    "source": "wikipedia_manual",
+    "tier": "A",
+    "angle": "ALL requested stars in one video"
+  },
+  {
+    "topic_id": "la_liga_all_time_goals",
+    "lane": "sports",
+    "sport": "football",
+    "yt_title": "La Liga All-Time Top Scorers: Messi, Ronaldo, Zarra",
+    "popular_people": [
+      "Lionel Messi",
+      "Cristiano Ronaldo",
+      "Telmo Zarra"
+    ],
+    "metric": "La Liga goals",
+    "source": "openfootball",
+    "tier": "A",
+    "angle": "Messi's decade"
+  },
+  {
+    "topic_id": "pl_all_time_assists",
+    "lane": "sports",
+    "sport": "football",
+    "yt_title": "Premier League Assist Kings: Giggs, Fabregas, De Bruyne, Salah",
+    "popular_people": [
+      "Ryan Giggs",
+      "Cesc Fabregas",
+      "Kevin De Bruyne",
+      "Mohamed Salah"
+    ],
+    "metric": "PL assists",
+    "source": "openfootball_or_wikipedia_manual",
+    "tier": "B",
+    "angle": "playmakers"
+  },
+  {
+    "topic_id": "pl_hat_tricks",
+    "lane": "sports",
+    "sport": "football",
+    "yt_title": "Premier League Hat-Trick Kings: Aguero, Kane, Salah, Haaland",
+    "popular_people": [
+      "Sergio Aguero",
+      "Harry Kane",
+      "Mohamed Salah",
+      "Erling Haaland"
+    ],
+    "metric": "PL hat-tricks",
+    "source": "openfootball",
+    "tier": "A",
+    "angle": "Haaland's pace"
+  },
+  {
+    "topic_id": "pl_fastest_to_100",
+    "lane": "sports",
+    "sport": "football",
+    "yt_title": "Fastest to 100 Premier League Goals: Haaland vs Kane vs Aguero",
+    "popular_people": [
+      "Erling Haaland",
+      "Harry Kane",
+      "Sergio Aguero",
+      "Mohamed Salah"
+    ],
+    "metric": "goals vs matches played",
+    "source": "openfootball",
+    "tier": "A",
+    "angle": "per-match race"
+  },
+  {
+    "topic_id": "pl_man_city_goals",
+    "lane": "sports",
+    "sport": "football",
+    "yt_title": "Most Premier League Goals for Man City",
+    "popular_people": [
+      "Sergio Aguero",
+      "Erling Haaland",
+      "Raheem Sterling"
+    ],
+    "metric": "PL goals for Man City",
+    "source": "openfootball",
+    "tier": "B",
+    "angle": "Haaland rising"
+  },
+  {
+    "topic_id": "pl_spurs_goals",
+    "lane": "sports",
+    "sport": "football",
+    "yt_title": "Most Premier League Goals for Tottenham",
+    "popular_people": [
+      "Harry Kane",
+      "Son Heung-min",
+      "Jermain Defoe"
+    ],
+    "metric": "PL goals for Spurs",
+    "source": "openfootball",
+    "tier": "B",
+    "angle": "Kane's legacy"
+  },
+  {
+    "topic_id": "world_cup_goals",
+    "lane": "sports",
+    "sport": "football",
+    "yt_title": "World Cup All-Time Top Scorers: Klose, Messi, Mbappe",
+    "popular_people": [
+      "Miroslav Klose",
+      "Lionel Messi",
+      "Kylian Mbappe",
+      "Ronaldo Nazario"
+    ],
+    "metric": "World Cup goals",
+    "source": "wikipedia_manual",
+    "tier": "A",
+    "angle": "Mbappe's pace"
+  },
+  {
+    "topic_id": "intl_goals_all_time",
+    "lane": "sports",
+    "sport": "football",
+    "yt_title": "Most International Goals Ever: Ronaldo, Messi, Ali Daei, Sunil Chhetri",
+    "popular_people": [
+      "Cristiano Ronaldo",
+      "Lionel Messi",
+      "Sunil Chhetri",
+      "Ali Daei"
+    ],
+    "metric": "international goals",
+    "source": "wikipedia_manual",
+    "tier": "A",
+    "angle": "Chhetri India hook"
+  },
+  {
+    "topic_id": "ballon_dor_wins",
+    "lane": "sports",
+    "sport": "football",
+    "yt_title": "Ballon d'Or Wins Over Time: Messi vs Ronaldo",
+    "popular_people": [
+      "Lionel Messi",
+      "Cristiano Ronaldo",
+      "Michel Platini",
+      "Johan Cruyff"
+    ],
+    "metric": "Ballon d'Or wins",
+    "source": "wikipedia_manual",
+    "tier": "A",
+    "angle": "awards race"
+  },
+  {
+    "topic_id": "bundesliga_goals",
+    "lane": "sports",
+    "sport": "football",
+    "yt_title": "Bundesliga All-Time Top Scorers: Lewandowski, Muller, Kane",
+    "popular_people": [
+      "Robert Lewandowski",
+      "Harry Kane",
+      "Thomas Muller"
+    ],
+    "metric": "Bundesliga goals",
+    "source": "openfootball",
+    "tier": "B",
+    "angle": "Kane at Bayern"
+  },
+  {
+    "topic_id": "ligue1_goals",
+    "lane": "sports",
+    "sport": "football",
+    "yt_title": "Ligue 1 Top Scorers: Mbappe, Neymar, Ibrahimovic at PSG",
+    "popular_people": [
+      "Kylian Mbappe",
+      "Neymar Jr",
+      "Zlatan Ibrahimovic"
+    ],
+    "metric": "Ligue 1 goals",
+    "source": "openfootball",
+    "tier": "A",
+    "angle": "PSG era"
+  },
+  {
+    "topic_id": "serie_a_goals",
+    "lane": "sports",
+    "sport": "football",
+    "yt_title": "Serie A All-Time Scorers: Piola, Totti, Ronaldo",
+    "popular_people": [
+      "Cristiano Ronaldo",
+      "Francesco Totti",
+      "Silvio Piola"
+    ],
+    "metric": "Serie A goals",
+    "source": "openfootball",
+    "tier": "B",
+    "angle": "Ronaldo in Italy"
+  },
+  {
+    "topic_id": "neymar_goals_by_club",
+    "lane": "sports",
+    "sport": "football",
+    "yt_title": "Neymar Goals by Club: Santos, Barcelona, PSG, Al Hilal",
+    "popular_people": [
+      "Neymar Jr"
+    ],
+    "metric": "career goals per club",
+    "source": "wikipedia_manual",
+    "tier": "A",
+    "angle": "Neymar career arc"
+  },
+  {
+    "topic_id": "goals_in_calendar_year",
+    "lane": "sports",
+    "sport": "football",
+    "yt_title": "Most Goals in a Calendar Year: Messi 2012 vs Haaland vs Mbappe",
+    "popular_people": [
+      "Lionel Messi",
+      "Erling Haaland",
+      "Kylian Mbappe",
+      "Robert Lewandowski"
+    ],
+    "metric": "goals per calendar year",
+    "source": "wikipedia_manual",
+    "tier": "A",
+    "angle": "peak-year comparison"
+  },
+  {
+    "topic_id": "el_clasico_goals",
+    "lane": "sports",
+    "sport": "football",
+    "yt_title": "El Clasico Top Scorers: Messi vs Ronaldo",
+    "popular_people": [
+      "Lionel Messi",
+      "Cristiano Ronaldo"
+    ],
+    "metric": "El Clasico goals",
+    "source": "wikipedia_manual",
+    "tier": "A",
+    "angle": "rivalry"
+  },
+  {
+    "topic_id": "transfer_fee_records",
+    "lane": "sports",
+    "sport": "football",
+    "yt_title": "World Record Transfer Fees Over Time: Neymar, Mbappe",
+    "popular_people": [
+      "Neymar Jr",
+      "Kylian Mbappe",
+      "Cristiano Ronaldo",
+      "Gareth Bale"
+    ],
+    "metric": "record fee by year",
+    "source": "wikipedia_manual",
+    "tier": "A",
+    "angle": "money headlines"
+  },
+  {
+    "topic_id": "euro_goals",
+    "lane": "sports",
+    "sport": "football",
+    "yt_title": "Euros All-Time Top Scorers: Ronaldo, Platini, Kane",
+    "popular_people": [
+      "Cristiano Ronaldo",
+      "Michel Platini",
+      "Harry Kane"
+    ],
+    "metric": "European Championship goals",
+    "source": "wikipedia_manual",
+    "tier": "B",
+    "angle": "Ronaldo record"
+  },
+  {
+    "topic_id": "yamal_youngest_records",
+    "lane": "sports",
+    "sport": "football",
+    "yt_title": "Lamine Yamal vs Legends: Youngest to Reach Milestones",
+    "popular_people": [
+      "Lamine Yamal",
+      "Pele",
+      "Kylian Mbappe",
+      "Lionel Messi"
+    ],
+    "metric": "milestones by age",
+    "source": "wikipedia_manual",
+    "tier": "A",
+    "angle": "Yamal hype"
+  },
+  {
+    "topic_id": "ucl_goals_by_match_haaland",
+    "lane": "sports",
+    "sport": "football",
+    "yt_title": "Haaland vs Messi vs Ronaldo vs Mbappe: UCL Goals by Matches Played",
+    "popular_people": [
+      "Erling Haaland",
+      "Lionel Messi",
+      "Cristiano Ronaldo",
+      "Kylian Mbappe"
+    ],
+    "metric": "UCL goals vs matches played",
+    "source": "wikipedia_manual",
+    "tier": "A",
+    "angle": "pace comparison"
+  },
+  {
+    "topic_id": "f1_wins",
+    "lane": "sports",
+    "sport": "other",
+    "yt_title": "F1 All-Time Race Wins: Hamilton vs Schumacher vs Verstappen",
+    "popular_people": [
+      "Lewis Hamilton",
+      "Michael Schumacher",
+      "Max Verstappen"
+    ],
+    "metric": "F1 wins",
+    "source": "jolpica_f1_api",
+    "tier": "B",
+    "angle": "small-share sports"
+  },
+  {
+    "topic_id": "tennis_grand_slams",
+    "lane": "sports",
+    "sport": "other",
+    "yt_title": "Grand Slam Titles Race: Djokovic, Nadal, Federer",
+    "popular_people": [
+      "Novak Djokovic",
+      "Rafael Nadal",
+      "Roger Federer"
+    ],
+    "metric": "Grand Slam titles",
+    "source": "wikipedia_manual",
+    "tier": "B",
+    "angle": "big three"
+  },
+  {
+    "topic_id": "nba_career_points",
+    "lane": "sports",
+    "sport": "other",
+    "yt_title": "NBA All-Time Scoring: LeBron vs Kareem vs Jordan",
+    "popular_people": [
+      "LeBron James",
+      "Kareem Abdul-Jabbar",
+      "Michael Jordan"
+    ],
+    "metric": "NBA career points",
+    "source": "wikipedia_manual",
+    "tier": "B",
+    "angle": "LeBron passes Kareem"
+  },
+  {
+    "topic_id": "olympic_golds",
+    "lane": "sports",
+    "sport": "other",
+    "yt_title": "Olympic Gold Medals: Phelps and Beyond",
+    "popular_people": [
+      "Michael Phelps",
+      "Usain Bolt"
+    ],
+    "metric": "Olympic golds",
+    "source": "wikipedia_manual",
+    "tier": "B",
+    "angle": "Olympic icons"
+  },
+  {
+    "topic_id": "f1_poles",
+    "lane": "sports",
+    "sport": "other",
+    "yt_title": "F1 Pole Positions All-Time: Hamilton, Senna, Verstappen",
+    "popular_people": [
+      "Lewis Hamilton",
+      "Ayrton Senna",
+      "Max Verstappen"
+    ],
+    "metric": "F1 poles",
+    "source": "jolpica_f1_api",
+    "tier": "B",
+    "angle": "qualifying kings"
+  },
+  {
+    "topic_id": "indian_actor_box_office",
+    "lane": "movies",
+    "sport": "movies",
+    "yt_title": "Indian Actors by Box Office Over the Years: Rajinikanth, SRK, Vijay, Prabhas",
+    "popular_people": [
+      "Rajinikanth",
+      "Shah Rukh Khan",
+      "Vijay",
+      "Prabhas",
+      "Allu Arjun"
+    ],
+    "metric": "reported worldwide gross",
+    "source": "wikipedia_plus_tmdb",
+    "tier": "A",
+    "angle": "reported figures, disputed; label as reported"
+  },
+  {
+    "topic_id": "rajini_vs_vijay_vs_ajith",
+    "lane": "movies",
+    "sport": "movies",
+    "yt_title": "Rajinikanth vs Vijay vs Ajith: Biggest Tamil Hits Timeline",
+    "popular_people": [
+      "Rajinikanth",
+      "Vijay",
+      "Ajith Kumar"
+    ],
+    "metric": "reported gross per film",
+    "source": "wikipedia_plus_tmdb",
+    "tier": "A",
+    "angle": "Chennai audience; label as reported"
+  },
+  {
+    "topic_id": "hollywood_actor_gross",
+    "lane": "movies",
+    "sport": "movies",
+    "yt_title": "Highest-Grossing Hollywood Actors Over Time: RDJ, Samuel L. Jackson",
+    "popular_people": [
+      "Robert Downey Jr.",
+      "Samuel L. Jackson",
+      "Scarlett Johansson"
+    ],
+    "metric": "cumulative worldwide gross",
+    "source": "wikipedia_plus_tmdb",
+    "tier": "B",
+    "angle": "future lane"
+  },
+  {
+    "topic_id": "oscar_nominations",
+    "lane": "movies",
+    "sport": "movies",
+    "yt_title": "Most Oscar Nominations Ever: Meryl Streep and Others",
+    "popular_people": [
+      "Meryl Streep",
+      "Jack Nicholson",
+      "Daniel Day-Lewis"
+    ],
+    "metric": "Oscar nominations/wins",
+    "source": "wikipedia_manual",
+    "tier": "B",
+    "angle": "future lane"
+  }
+]

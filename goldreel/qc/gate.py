@@ -1,6 +1,7 @@
 """Central Quality Gate orchestrator for GoldReel automated pipeline."""
 
 import json
+from pathlib import Path
 from typing import Any
 
 from goldreel.config.loader import PipelineConfig, load_pipeline_config
@@ -180,6 +181,41 @@ class QualityGate:
             is_dry_run=dry_run,
         )
         checks.extend(sim_checks)
+
+        # 5. Check Player Portrait Coverage for Sports lane
+        if facts_path.exists():
+            try:
+                with open(facts_path, encoding="utf-8") as f:
+                    facts_dict = json.load(f)
+                    lane = facts_dict.get("lane", "")
+                    if lane == "sports":
+                        entities_to_check = [
+                            r.get("entity", "")
+                            for r in facts_dict.get("records", [])
+                            if r.get("entity")
+                        ]
+                        if entities_to_check:
+                            missing_photos = []
+                            for ent in entities_to_check:
+                                slug = ent.lower().replace(" ", "_").replace("-", "_")
+                                img_path = Path("assets/images/players") / f"{slug}.png"
+                                if not img_path.exists():
+                                    missing_photos.append(ent)
+                            checks.append(
+                                QCCheckItem(
+                                    name="player_portraits_present",
+                                    category="visual",
+                                    passed=len(missing_photos) == 0,
+                                    severity="critical",
+                                    message="All entity portrait photos present"
+                                    if not missing_photos
+                                    else f"Missing player portrait photos for {len(missing_photos)} entities: {', '.join(missing_photos)}",
+                                    measured_value=len(entities_to_check) - len(missing_photos),
+                                    target_value=len(entities_to_check),
+                                )
+                            )
+            except Exception:
+                pass
 
         # Compile overall QC report
         failed_critical = [c for c in checks if not c.passed and c.severity == "critical"]

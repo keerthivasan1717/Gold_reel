@@ -66,6 +66,32 @@ def test_publish_scheduler_computes_scheduled_timestamps():
     assert re.match(r"^\d{4}-\d{2}-\d{2}T13:00:00Z$", t_short)
 
 
+def test_publish_scheduler_format_deduplication(tmp_path: Path):
+    """Verify has_video_scheduled_for_date allows landscape and portrait on the same date."""
+    history = PublishHistory(history_path=tmp_path / "test_format_history.json")
+    scheduler = PublishScheduler(history=history)
+
+    target_time = "2026-11-25T13:00:00Z"
+
+    # Initially none scheduled
+    assert scheduler.has_video_scheduled_for_date(target_time, format_type="landscape") is False
+    assert scheduler.has_video_scheduled_for_date(target_time, format_type="portrait") is False
+
+    # Record landscape upload
+    history.record_upload("job_l", "vid_l", target_time, "scheduled", format_type="landscape")
+
+    # Landscape is now scheduled, but portrait is NOT blocked
+    assert scheduler.has_video_scheduled_for_date(target_time, format_type="landscape") is True
+    assert scheduler.has_video_scheduled_for_date(target_time, format_type="portrait") is False
+
+    # Record portrait upload
+    history.record_upload("job_p", "vid_p", target_time, "scheduled", format_type="portrait")
+
+    # Both are now scheduled
+    assert scheduler.has_video_scheduled_for_date(target_time, format_type="landscape") is True
+    assert scheduler.has_video_scheduled_for_date(target_time, format_type="portrait") is True
+
+
 def test_thumbnail_generator_landscape_and_portrait(tmp_path: Path):
     """Verify ThumbnailGenerator creates 1280x720 and 1080x1920 black-and-gold assets."""
     facts = FactTable(
