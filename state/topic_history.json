@@ -193,5 +193,42 @@
     ],
     "facts_hash": "7bb0b5ae3e0db1cafb7959f56ac9e7dd4f413926524e43d3f347f5d8020300cf",
     "created_at": "2026-11-21T13:46:07.796028+00:00"
+  },
+  {
+    "job_id": "20261122_153416_3214f1",
+    "topic_id": "ipl_most_centuries",
+    "title": "IPL ALL-TIME HIGHEST WICKET-TAKERS (2008 - 2024)",
+    "lane": "sports",
+    "angle_id": "milestone_anniversary",
+    "entities": [
+      "Yuzvendra Chahal",
+      "Piyush Chawla",
+      "Dwayne Bravo",
+      "Bhuvneshwar Kumar",
+      "Sunil Narine",
+      "Ravichandran Ashwin",
+      "Amit Mishra",
+      "Lasith Malinga",
+      "Jasprit Bumrah",
+      "Rashid Khan"
+    ],
+    "facts_hash": "02bbfffff65378001c3cb630076473064aabede87082bf1f75aec1a8fb509e41",
+    "created_at": "2026-11-22T15:34:16.840940+00:00"
+  },
+  {
+    "job_id": "20261122_153735_4d7f27",
+    "topic_id": "ipl_most_centuries",
+    "title": "IPL ALL-TIME MOST SIXES",
+    "lane": "sports",
+    "angle_id": "milestone_anniversary",
+    "entities": [
+      "Chris Gayle",
+      "Rohit Sharma",
+      "Virat Kohli",
+      "MS Dhoni",
+      "AB de Villiers"
+    ],
+    "facts_hash": "0ebe7149e0e6b0b8ba345c3acf5b5b219f698d267dd69c1b183b996994b97243",
+    "created_at": "2026-11-22T15:37:35.342332+00:00"
   }
 ]
