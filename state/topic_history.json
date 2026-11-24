@@ -267,5 +267,42 @@
     ],
     "facts_hash": "c8b7b09c28f2a6fe20df5aa12fbf42cc8583587a8b6a5152b47747387b21272f",
     "created_at": "2026-11-23T19:30:05.295803+00:00"
+  },
+  {
+    "job_id": "20261124_190103_14c21e",
+    "topic_id": "ipl_most_centuries",
+    "title": "IPL ALL-TIME MOST RUNS PROGRESSION (2008 - 2026)",
+    "lane": "sports",
+    "angle_id": "milestone_anniversary",
+    "entities": [
+      "Virat Kohli",
+      "Rohit Sharma",
+      "Shikhar Dhawan",
+      "David Warner",
+      "KL Rahul",
+      "Suresh Raina",
+      "MS Dhoni",
+      "Ajinkya Rahane",
+      "Sanju Samson",
+      "AB de Villiers"
+    ],
+    "facts_hash": "4816a9649bf8b37bf32ddc7c9ba1e341122c32ab40e5385003bd6c4fa11853de",
+    "created_at": "2026-11-24T19:01:03.307704+00:00"
+  },
+  {
+    "job_id": "20261124_190348_d57a97",
+    "topic_id": "ipl_most_centuries",
+    "title": "IPL ALL-TIME MOST SIXES",
+    "lane": "sports",
+    "angle_id": "custom",
+    "entities": [
+      "Chris Gayle",
+      "Rohit Sharma",
+      "Virat Kohli",
+      "MS Dhoni",
+      "AB de Villiers"
+    ],
+    "facts_hash": "96dac6c873b4878be5d2b83e235c53ee81de27e6d428f099c88d37ee2bd535d7",
+    "created_at": "2026-11-24T19:03:48.526428+00:00"
   }
 ]
