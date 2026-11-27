@@ -378,5 +378,42 @@
     ],
     "facts_hash": "8c8d06a7d8c2bb6938f69a8323fd6f65b682284f7d5e6e8955a4e2f24b55f901",
     "created_at": "2026-11-26T17:55:21.203263+00:00"
+  },
+  {
+    "job_id": "20261127_173710_7d5b96",
+    "topic_id": "ipl_most_centuries",
+    "title": "ALL-TIME INTERNATIONAL CRICKET WICKETS (1985 - 2024)",
+    "lane": "sports",
+    "angle_id": "custom",
+    "entities": [
+      "Muttiah Muralitharan",
+      "Shane Warne",
+      "James Anderson",
+      "Anil Kumble",
+      "Glenn McGrath",
+      "Wasim Akram",
+      "Stuart Broad",
+      "Courtney Walsh",
+      "Ravichandran Ashwin",
+      "Brett Lee"
+    ],
+    "facts_hash": "ec64c3082b309e5bae4a37c7059c1fdb1afbecdb61e480ff2400ffac70489132",
+    "created_at": "2026-11-27T17:37:10.694271+00:00"
+  },
+  {
+    "job_id": "20261127_174001_eca1c3",
+    "topic_id": "ipl_most_centuries",
+    "title": "IPL ALL-TIME MOST SIXES",
+    "lane": "sports",
+    "angle_id": "custom",
+    "entities": [
+      "Chris Gayle",
+      "Rohit Sharma",
+      "Virat Kohli",
+      "MS Dhoni",
+      "AB de Villiers"
+    ],
+    "facts_hash": "73a5ec0bb8bf0e026382d1ffe2911e3bc6e2a85ba521a7732a6c7fcf555c5a2e",
+    "created_at": "2026-11-27T17:40:01.279359+00:00"
   }
 ]
